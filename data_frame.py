@@ -2,6 +2,15 @@ import os
 
 import pandas    
 
+dataframe = None
+
+def get_dataframe_rows():
+    if (dataframe):
+        return dataframe.shape[0]
+    else:
+        return None
+
+
 def handle_data_frame_menu():
     datasets_directory_name = "datasets"
     datasets_found_in_directory = os.listdir(datasets_directory_name)
