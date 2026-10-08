@@ -15,12 +15,11 @@ def handle_data_partitioning_menu():
     partitioning_strategy_names_with_indices = {index: data_partitioning_name
                                                 for index, data_partitioning_name in enumerate(list(data_partitioning_strategy_names), start=1)
                                                 }  
-    
-    data_partitioning_strategy_selection_menu_text = "Select a partitioning strategy to use by typing the corresponding number."
 
+    data_partitioning_strategy_selection_menu_text = ""
     for index, current_partitioning_strategy in partitioning_strategy_names_with_indices.items():
         data_partitioning_strategy_selection_menu_text += f"\n{index}. {current_partitioning_strategy.value}"
-    data_partitioning_strategy_selection_menu_text += "\n"
+    data_partitioning_strategy_selection_menu_text += "\nSelect a partitioning strategy to use by typing the corresponding number: "
 
     has_menu_been_exited = False
     while has_menu_been_exited == False:

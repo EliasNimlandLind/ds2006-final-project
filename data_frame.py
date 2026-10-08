@@ -11,11 +11,12 @@ def handle_data_frame_menu():
         for index, current_dataset in enumerate(datasets_found_in_directory, start=1)
     }
 
-    dataset_selection_menu_text = "Select a dataset to load by typing the corresponding number."
+    dataset_selection_menu_text = ""
     for index, dataset in datasets_with_indices.items():
         dataset_selection_menu_text += f"\n{index}. {dataset}"
-    dataset_selection_menu_text += f"\n{len(datasets_with_indices) + 1}. Another dataset.\n"
-
+    dataset_selection_menu_text += (f"\n{len(datasets_with_indices) + 1}. Another dataset.\n"
+                                    "Select a dataset to load by typing the corresponding number: ")
+    
     path_to_dataset_to_load = ""
 
     has_menu_been_exited = False
