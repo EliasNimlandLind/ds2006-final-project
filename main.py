@@ -5,4 +5,5 @@ def main():
     dataframe = handle_data_frame_menu()
     data_partitioning_configuration = handle_data_partitioning_menu()
 
+    print(data_partitioning_configuration)
 main()

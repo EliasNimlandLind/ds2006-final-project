@@ -8,7 +8,10 @@ class data_partitioning_strategy_names(Enum):
 def handle_data_partitioning_menu():
     data_partitioning_configuration = {
         "is_stratified": True,
-        "data_partitioning_strategy_name": data_partitioning_strategy_names.TRAIN_TEST_SPLIT
+        "data_partitioning_strategy_name": data_partitioning_strategy_names.TRAIN_TEST_SPLIT,
+        "number_of_folds": 0,
+        "training_percentage": 0,
+        "test_percentage": 0
     }
     
     partitioning_strategy_names_with_indices = {index: data_partitioning_name
@@ -27,9 +30,11 @@ def handle_data_partitioning_menu():
             input_data_partitioning_strategy_selection = int(input(data_partitioning_strategy_selection_menu_text))
         except: 
             print("\nEnter an integer.\n")
-
-        if (0 < input_data_partitioning_strategy_selection <= 2):
+        if (0 < input_data_partitioning_strategy_selection <= len(partitioning_strategy_names_with_indices)):
             data_partitioning_configuration["data_partitioning_strategy_name"] = partitioning_strategy_names_with_indices[input_data_partitioning_strategy_selection].value
+            
+            if (data_partitioning_configuration["data_partitioning_strategy_name"] == data_partitioning_strategy_names.TRAIN_TEST_SPLIT.value):
+                
             has_menu_been_exited = True
         else:
             print("Enter a valid integer.\n")
