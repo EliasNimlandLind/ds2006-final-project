@@ -5,7 +5,6 @@ class data_partitioning_strategy_names(Enum):
     TRAIN_TEST_SPLIT = "Train/Test Split"
     X_FOLD_CROSS_VALIDATION = "X-Fold Cross-Validation"
 
-
 def handle_data_partitioning_menu():
     data_partitioning_configuration = {
         "is_stratified": True,
