@@ -17,18 +17,28 @@ def main():
     dataset_selection_menu_text += f"\n{len(datasets_with_indices) + 1}. Another dataset.\n"
 
     path_to_dataset_to_load = ""
-    input_dataset_selection = int(input(dataset_selection_menu_text))
-    if (0 < input_dataset_selection <= len(datasets_with_indices)):
-        path_to_dataset_to_load = f"{datasets_directory_name}/{datasets_with_indices[input_dataset_selection]}"
-    
-    elif (len(datasets_with_indices) < input_dataset_selection < len(datasets_with_indices) + 2): # This alternative should only be true if the selected value between the length of all identified datasets and less than the length + 2-.
-        dataset_selection_menu_text = "Enter the path to the dataset: "
-        input_dataset_selection = input(dataset_selection_menu_text)
 
-        path_to_dataset_to_load = input_dataset_selection
+    has_menu_been_exited = False
+    while has_menu_been_exited == False:
+        input_dataset_selection = 0
+        try:
+            input_dataset_selection = int(input(dataset_selection_menu_text))
+        except: 
+            print("Enter an integer.")
 
-    else:
-        print("Invalid input.")
+        if (0 < input_dataset_selection <= len(datasets_with_indices)):
+            path_to_dataset_to_load = f"{datasets_directory_name}/{datasets_with_indices[input_dataset_selection]}"
+            has_menu_been_exited = True
+            
+        elif (len(datasets_with_indices) < input_dataset_selection < len(datasets_with_indices) + 2): # This alternative should only be true if the selected value between the length of all identified datasets and less than the length + 2.
+            dataset_selection_menu_text = "Enter the path to the dataset: "
+            input_dataset_selection = input(dataset_selection_menu_text)
+
+            path_to_dataset_to_load = input_dataset_selection
+            has_menu_been_exited = True
+
+        else:
+            print("Invalid input.")
 
     dataframe = pandas.read_csv(path_to_dataset_to_load)
 
