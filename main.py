@@ -6,6 +6,18 @@ def main():
     dataframe = handle_data_frame_menu()
     data_partitioning_configuration = handle_data_partitioning_menu(dataframe.shape[0])
 
-    handle_nearest_neighbour_conductor_menu(dataframe, data_partitioning_configuration["data_partitioning_strategy_name"])
-    print(data_partitioning_configuration)
+    k_nearest_neighbour_conductors = handle_nearest_neighbour_conductor_menu(dataframe, data_partitioning_configuration["data_partitioning_strategy_name"])
+    experiment_configuration_text = ("*********************************************\n"
+                                "EXPERIMENT CONFIGURATION\n\n"
+                                "Data Partitioning Strategy:\n"
+                                "5-Fold Stratified Cross-Validation\n\n"
+                                "k-NN Experiments:\n\n")
+
+    k_nearest_neighbour_conductor_counter = 1
+    for current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors:
+        experiment_configuration_text += f"Experiment: {k_nearest_neighbour_conductor_counter} {str(current_k_nearest_neighbour_conductor)}\n"
+        k_nearest_neighbour_conductor_counter += 1
+        
+    experiment_configuration_text += "*********************************************"
+    print(experiment_configuration_text)
 main()
