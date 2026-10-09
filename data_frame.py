@@ -1,6 +1,8 @@
 import os
 
-import pandas    
+import pandas
+
+from utility import get_items_with_indices    
 
 dataframe = None
 
@@ -9,14 +11,11 @@ def handle_data_frame_menu():
     datasets_directory_name = "datasets"
     datasets_found_in_directory = os.listdir(datasets_directory_name)
     
-    datasets_with_indices = {
-        index: current_dataset
-        for index, current_dataset in enumerate(datasets_found_in_directory, start=1)
-    }
+    datasets_with_indices = get_items_with_indices(datasets_found_in_directory)
 
     dataset_selection_menu_text = ""
-    for index, dataset in datasets_with_indices.items():
-        dataset_selection_menu_text += f"\n{index}. {dataset}"
+    for current_index, dataset in datasets_with_indices.items():
+        dataset_selection_menu_text += f"\n{current_index}. {dataset}"
     dataset_selection_menu_text += (f"\n{len(datasets_with_indices) + 1}. Another dataset.\n"
                                     "Select a dataset to load by typing the corresponding number: ")
     

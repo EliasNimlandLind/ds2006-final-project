@@ -8,7 +8,6 @@ class K_nearest_neighbour_conductor():
     def __str__(self):
         return f"k = {self.k_value}"
 
-# TODO only continue if current k value is valid, i.e. k > 0
 def handle_nearest_neighbour_conductor_menu(dataframe, data_partitioning_strategy):
     k_nearest_neighbour_conductors = []
 
@@ -40,3 +39,4 @@ def handle_nearest_neighbour_conductor_menu(dataframe, data_partitioning_strateg
         else: 
             print("\nThe number of experiments to conduct must be greater than 0.\n")
     return k_nearest_neighbour_conductors
+

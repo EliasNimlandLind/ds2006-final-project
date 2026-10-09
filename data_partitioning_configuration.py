@@ -1,5 +1,7 @@
 from enum import Enum
 
+from utility import get_items_with_indices
+
 
 class data_partitioning_strategy_names(Enum):
     TRAIN_TEST_SPLIT = "Train/Test Split"
@@ -14,13 +16,11 @@ def handle_data_partitioning_menu(number_of_rows):
         "testing_percentage": 0
     }
     
-    partitioning_strategy_names_with_indices = {index: data_partitioning_name
-                                                for index, data_partitioning_name in enumerate(list(data_partitioning_strategy_names), start=1)
-                                                }  
+    partitioning_strategy_names_with_indices = get_items_with_indices(data_partitioning_strategy_names)
 
     data_partitioning_strategy_selection_menu_text = ""
-    for index, current_partitioning_strategy in partitioning_strategy_names_with_indices.items():
-        data_partitioning_strategy_selection_menu_text += f"\n{index}. {current_partitioning_strategy.value}"
+    for current_index, current_partitioning_strategy in partitioning_strategy_names_with_indices.items():
+        data_partitioning_strategy_selection_menu_text += f"\n{current_index}. {current_partitioning_strategy.value}"
     data_partitioning_strategy_selection_menu_text += "\nSelect a partitioning strategy to use by typing the corresponding number: "
 
     has_menu_been_exited = False
