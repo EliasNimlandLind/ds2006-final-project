@@ -40,3 +40,5 @@ def handle_nearest_neighbour_conductor_menu(dataframe, data_partitioning_strateg
             print("\nThe number of experiments to conduct must be greater than 0.\n")
     return k_nearest_neighbour_conductors
 
+def execute_experiments(k_nearest_neighbour_conductors):
+    pass
