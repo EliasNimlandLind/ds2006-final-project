@@ -4,12 +4,6 @@ import pandas
 
 dataframe = None
 
-def get_dataframe_rows():
-    if (dataframe):
-        return dataframe.shape[0]
-    else:
-        return None
-
 
 def handle_data_frame_menu():
     datasets_directory_name = "datasets"
