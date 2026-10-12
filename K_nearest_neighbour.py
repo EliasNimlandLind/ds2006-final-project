@@ -32,6 +32,7 @@ class K_nearest_neighbour_conductor():
         print("Accuracy:", accuracy_score(classes_test, predictions))
 
         print(classification_report(classes_test, predictions))
+        self.k_neighbour_classifier = k_neighbours_classifier
 
 def handle_nearest_neighbour_conductor_menu(dataframe, data_partitioning_strategy):
     k_nearest_neighbour_conductors = []
