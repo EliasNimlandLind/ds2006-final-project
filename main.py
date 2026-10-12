@@ -7,7 +7,7 @@ def main():
     dataframe = handle_data_frame_menu()
     data_partitioning_configuration = handle_data_partitioning_menu(dataframe.shape[0])
 
-    k_nearest_neighbour_conductors_without_indices = handle_nearest_neighbour_conductor_menu(dataframe, data_partitioning_configuration["data_partitioning_strategy_name"])
+    k_nearest_neighbour_conductors_without_indices = handle_nearest_neighbour_conductor_menu(dataframe, data_partitioning_configuration)
     experiment_configuration_text = ("\n*********************************************\n"
                                 "EXPERIMENT CONFIGURATION\n\n"
                                 "Data Partitioning Strategy:\n"
