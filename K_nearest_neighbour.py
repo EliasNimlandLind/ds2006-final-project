@@ -15,10 +15,9 @@ class K_nearest_neighbour_conductor():
         features = self.dataframe.drop(self.dataframe.columns[-1],axis=1)
         # Creates a dataframe from solely the data in the last column.
         classes = self.dataframe[self.dataframe.columns[-1]]
-        print(int(self.data_partitioning_strategy["training_percentage"]))
         # Split the data into train/test sets 
         features_train, features_test, classes_train, classes_test = train_test_split(
-        features, classes, test_size=4, random_state=10
+        features, classes, test_size=self.data_partitioning_strategy["testing_percentage"], random_state=10
         )
 
         # Creates a Knn Classifier Object with k=1
