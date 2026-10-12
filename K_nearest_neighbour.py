@@ -1,12 +1,14 @@
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
+
+from data_partitioning_configuration import data_partitioning_strategy_names
 
 class K_nearest_neighbour_conductor():
-    def __init__(self, k_value, dataframe, data_partitioning_strategy):
+    def __init__(self, k_value, dataframe, data_partitioning_configuration):
         self.k_value = k_value
         self.dataframe = dataframe
-        self.data_partitioning_strategy = data_partitioning_strategy
+        self.data_partitioning_strategy = data_partitioning_configuration
 
     def __str__(self):
         return f"k = {self.k_value}"
@@ -15,25 +17,53 @@ class K_nearest_neighbour_conductor():
         features = self.dataframe.drop(self.dataframe.columns[-1],axis=1)
         # Creates a dataframe from solely the data in the last column.
         classes = self.dataframe[self.dataframe.columns[-1]]
-        print(int(self.data_partitioning_strategy["training_percentage"]))
+        
+        if (self.data_partitioning_strategy['is_stratified'] == True):
+            what_to_stratify = classes
+
+        # Creates a Knn Classifier Object.
+        k_neighbours_classifier = KNeighborsClassifier(n_neighbors=self.k_value)
+
         # Split the data into train/test sets 
         features_train, features_test, classes_train, classes_test = train_test_split(
-        features, classes, test_size=4, random_state=10
-        )
-
-        # Creates a Knn Classifier Object with k=1
-        k_neighbours_classifier = KNeighborsClassifier(n_neighbors=self.k_value)
+        features, classes, test_size=self.data_partitioning_strategy['testing_percentage'], random_state=10, stratify=what_to_stratify
+        )     
 
         # Trains this Knn Classifier with the training set obtained previously:
         k_neighbours_classifier.fit(features_train, classes_train)
 
-        # Obtains the predictions from the kNN classifier:
+        model_statistics = ""
         predictions = k_neighbours_classifier.predict(features_test)
-        print("Accuracy:", accuracy_score(classes_test, predictions))
+    
+        if (self.data_partitioning_strategy['data_partitioning_strategy_name'] == data_partitioning_strategy_names.TRAIN_TEST_SPLIT.value):
+            # Obtains the predictions from the kNN classifier:
+            model_statistics = (f"\n{str(self)}\n"
+                                    f"Accuracy: {accuracy_score(classes_test, predictions)}\n\n"
+                                    f"  {classification_report(classes_test, predictions)}\n\n"
+                                    )
+        else:
+            score_types = ["accuracy", 
+                           "average_precision", 
+                           "recall_micro", 
+                           "f1_micro"]
+            
+            model_statistics = f"\n{str(self)}"
+            for current_score_type in score_types:
+                scores = ""
+                
+                if self.data_partitioning_strategy["is_stratified"] == False:
+                    scores = cross_val_score(k_neighbours_classifier, X=features, y=classes, cv=self.data_partitioning_strategy['number_of_folds'], scoring=current_score_type)
+                else:
+                    stratified_folds = StratifiedKFold(n_splits=self.data_partitioning_strategy['number_of_folds'])
+                    scores = cross_val_score(k_neighbours_classifier, X=features, y=classes, cv=stratified_folds, scoring=current_score_type, )
+                    
+                model_statistics += f"\n{current_score_type}:\n    {scores}\n    Mean: {scores.mean()}\n"
 
-        print(classification_report(classes_test, predictions))
+        print(model_statistics)
+            
+        self.k_neighbours_classifier = k_neighbours_classifier
 
-def handle_nearest_neighbour_conductor_menu(dataframe, data_partitioning_strategy):
+def handle_nearest_neighbour_conductor_menu(dataframe, data_partitioning_configuration):
     k_nearest_neighbour_conductors = []
 
     has_menu_been_exited = False
@@ -55,7 +85,7 @@ def handle_nearest_neighbour_conductor_menu(dataframe, data_partitioning_strateg
                         print("\nThe current k value must be an integer.\n")
 
                     if (current_k_value > 0):
-                        current_k_nearest_neighbour_conductor = K_nearest_neighbour_conductor(current_k_value, dataframe, data_partitioning_strategy)
+                        current_k_nearest_neighbour_conductor = K_nearest_neighbour_conductor(current_k_value, dataframe, data_partitioning_configuration)
                         k_nearest_neighbour_conductors.append(current_k_nearest_neighbour_conductor)
                         is_current_k_value_valid = True
                     else:
