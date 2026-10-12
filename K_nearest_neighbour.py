@@ -38,13 +38,13 @@ class K_nearest_neighbour_conductor():
 
             # Obtains the predictions from the kNN classifier:
             predictions = k_neighbours_classifier.predict(features_test)
-            model_statistics = (f"\n\n{str(self)}\n\n"
+            model_statistics = (f"\n{str(self)}\n"
                                 f"Accuracy: {accuracy_score(classes_test, predictions)}\n\n"
-                                f"{classification_report(classes_test, predictions)}\n\n"
+                                f"  {classification_report(classes_test, predictions)}\n\n"
                                 )
         else:
             cross_val_scores = cross_val_score(k_neighbours_classifier, X=features, y=classes, cv=self.data_partitioning_strategy['number_of_folds'], scoring="accuracy")
-            model_statistics = f"Accuracy:\n{cross_val_scores}"
+            model_statistics = f"\n{str(self)}\nAccuracy:\n    {cross_val_scores}\n    Mean: {cross_val_scores.mean()}"
         
         print(model_statistics)
             
