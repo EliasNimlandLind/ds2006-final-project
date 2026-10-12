@@ -60,10 +60,10 @@ def handle_data_partitioning_menu(number_of_rows):
                         number_of_k_fold_input = int(input("Enter number of folds to be used for cross validation, specified as an integer: "))
                         data_partitioning_configuration['number_of_folds'] = number_of_k_fold_input
 
-                        if (number_of_k_fold_input < number_of_rows):
+                        if (2 <= number_of_k_fold_input < number_of_rows):
                             has_menu_been_exited = True
                         else:
-                            print(f"The number of k folds must be less than the number of rows, i.e. {number_of_rows}.")
+                            print(f"The number of k folds must be less than the number of rows, i.e. {number_of_rows}, in addition to being less than or equal to two.")
                     except:
                         print("\nEnter an integer.\n")
         else:
