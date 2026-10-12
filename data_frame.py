@@ -2,7 +2,7 @@ import os
 
 import pandas
 
-from utility import get_items_with_indices    
+from utility import get_items_as_string_with_indices    
 
 dataframe = None
 
@@ -11,7 +11,7 @@ def handle_data_frame_menu():
     datasets_directory_name = "datasets"
     datasets_found_in_directory = os.listdir(datasets_directory_name)
     
-    datasets_with_indices = get_items_with_indices(datasets_found_in_directory)
+    datasets_with_indices = get_items_as_string_with_indices(datasets_found_in_directory)
 
     dataset_selection_menu_text = ""
     for current_index, dataset in datasets_with_indices.items():

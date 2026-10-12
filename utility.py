@@ -1,4 +1,4 @@
-def get_items_with_indices(items_without_indices):
+def get_items_as_string_with_indices(items_without_indices):
     """
         Returns a dictionary comprising each index as a key and each corresponding value being an item based on the argument.
     """

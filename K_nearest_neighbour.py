@@ -1,3 +1,6 @@
+from sklearn.metrics import accuracy_score, classification_report
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
 
 class K_nearest_neighbour_conductor():
     def __init__(self, k_value, dataframe, data_partitioning_strategy):
@@ -7,6 +10,28 @@ class K_nearest_neighbour_conductor():
 
     def __str__(self):
         return f"k = {self.k_value}"
+
+    def execute_experiment(self):        
+        features = self.dataframe.drop(self.dataframe.columns[-1],axis=1)
+        # Creates a dataframe from solely the data in the last column.
+        classes = self.dataframe[self.dataframe.columns[-1]]
+        print(int(self.data_partitioning_strategy["training_percentage"]))
+        # Split the data into train/test sets 
+        features_train, features_test, classes_train, classes_test = train_test_split(
+        features, classes, test_size=4, random_state=10
+        )
+
+        # Creates a Knn Classifier Object with k=1
+        k_neighbours_classifier = KNeighborsClassifier(n_neighbors=self.k_value)
+
+        # Trains this Knn Classifier with the training set obtained previously:
+        k_neighbours_classifier.fit(features_train, classes_train)
+
+        # Obtains the predictions from the kNN classifier:
+        predictions = k_neighbours_classifier.predict(features_test)
+        print("Accuracy:", accuracy_score(classes_test, predictions))
+
+        print(classification_report(classes_test, predictions))
 
 def handle_nearest_neighbour_conductor_menu(dataframe, data_partitioning_strategy):
     k_nearest_neighbour_conductors = []
@@ -39,6 +64,3 @@ def handle_nearest_neighbour_conductor_menu(dataframe, data_partitioning_strateg
         else: 
             print("\nThe number of experiments to conduct must be greater than 0.\n")
     return k_nearest_neighbour_conductors
-
-def execute_experiments(k_nearest_neighbour_conductors):
-    pass

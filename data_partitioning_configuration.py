@@ -1,6 +1,6 @@
 from enum import Enum
 
-from utility import get_items_with_indices
+from utility import get_items_as_string_with_indices
 
 
 class data_partitioning_strategy_names(Enum):
@@ -16,7 +16,7 @@ def handle_data_partitioning_menu(number_of_rows):
         "testing_percentage": 0
     }
     
-    partitioning_strategy_names_with_indices = get_items_with_indices(data_partitioning_strategy_names)
+    partitioning_strategy_names_with_indices = get_items_as_string_with_indices(data_partitioning_strategy_names)
 
     data_partitioning_strategy_selection_menu_text = ""
     for current_index, current_partitioning_strategy in partitioning_strategy_names_with_indices.items():
