@@ -29,12 +29,12 @@ class K_nearest_neighbour_conductor():
         features, classes, test_size=self.data_partitioning_strategy['testing_percentage'], random_state=10, stratify=what_to_stratify
         )     
 
+        # Trains this Knn Classifier with the training set obtained previously:
         k_neighbours_classifier.fit(features_train, classes_train)
 
         model_statistics = ""
 
         if (self.data_partitioning_strategy['data_partitioning_strategy_name'] == data_partitioning_strategy_names.TRAIN_TEST_SPLIT.value):
-            # Trains this Knn Classifier with the training set obtained previously:
 
             # Obtains the predictions from the kNN classifier:
             predictions = k_neighbours_classifier.predict(features_test)
@@ -43,8 +43,15 @@ class K_nearest_neighbour_conductor():
                                 f"  {classification_report(classes_test, predictions)}\n\n"
                                 )
         else:
-            cross_val_scores = cross_val_score(k_neighbours_classifier, X=features, y=classes, cv=self.data_partitioning_strategy['number_of_folds'], scoring="accuracy")
-            model_statistics = f"\n{str(self)}\nAccuracy:\n    {cross_val_scores}\n    Mean: {cross_val_scores.mean()}"
+            score_types = ["accuracy", 
+                           "average_precision", 
+                           "recall_micro", 
+                           "f1_micro"]
+            
+            model_statistics = f"\n{str(self)}"
+            for current_score_type in score_types:
+                cross_value_scores = cross_val_score(k_neighbours_classifier, X=features, y=classes, cv=self.data_partitioning_strategy['number_of_folds'], scoring=current_score_type)
+                model_statistics += f"\n{current_score_type}:\n    {cross_value_scores}\n    Mean: {cross_value_scores.mean()}"
         
         print(model_statistics)
             
