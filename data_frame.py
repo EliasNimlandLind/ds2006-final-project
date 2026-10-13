@@ -1,9 +1,11 @@
+import os
+
 import pandas
 
-from utility import get_items_as_string_with_indices, list_content_of_directory    
+from encoding import normalize_dataframe_containing_features
+from utility import get_last_column_as_a_separate_dataframe, get_last_column_of_dataframe, get_items_as_string_with_indices, list_content_of_directory    
 
 dataframe = None
-
 
 def handle_data_frame_menu():
     datasets_directory_name = "datasets"
@@ -36,28 +38,36 @@ def handle_data_frame_menu():
             input_dataset_selection = input(dataset_selection_menu_text)
 
             path_to_dataset_to_load = input_dataset_selection
+
+            if os.path.exists(path_to_dataset_to_load) == False:
+                print("\nNo such directory exists.")
+                continue # If the directory specified by the user does not exists, the loop iterates without assigning has_menu_been_exited to true.
+
             has_menu_been_exited = True
 
         else:
             print("Enter a valid integer.\n")
 
     dataframe = pandas.read_csv(path_to_dataset_to_load)
-
+    
     dataframe_column_names_text = ""
     for current_feature_name in dataframe.columns[:-1]: # Using [:-1] is done to limit the iteration to item before the last one to avoid concatenate the name of the target classes.
         dataframe_column_names_text += f"\n{str(current_feature_name)}"
 
     dataframe_target_classes_text = ""
-    for current_target_class_name in dataframe[dataframe.columns[-1]].unique(): # This gets all unique values from the last column, i.e. the target classes.
+    for current_target_class_name in get_last_column_as_a_separate_dataframe(dataframe).unique(): # This gets all unique values from the last column, i.e. the target classes.
         dataframe_target_classes_text += f"\n{str(current_target_class_name)}"
 
     # Using a collection leads to high readability due to all data being viewable at once due to vertical alignment.
-    dataframe_complete_information_text = (f"\nThe dataset was loaded correctly.\n\n" 
+    dataframe_complete_information_text = (f"\n\nThe values of the 10 first rows before encoding are:\n"
                                            f"{dataframe.head(10)}\n\n"
+                                           f"The values of the 10 first rows after encoding are:\n"
+                                           f"{normalize_dataframe_containing_features(dataframe.drop(get_last_column_of_dataframe(dataframe),axis=1).head(10))}\n\n"
                                            f"The number of rows: {dataframe.shape[0]}\nThe number of columns: {dataframe.shape[1]}\n\n"
                                            f"The names of the features: {dataframe_column_names_text}\n\n"
                                            f"The names of the target classes are: {dataframe_target_classes_text}\n\n"
-                                           f"{dataframe.describe()}\n\n{dataframe[dataframe.columns[-1]].value_counts()}\n")
+                                           f"{dataframe.describe()}\n\n{get_last_column_as_a_separate_dataframe(dataframe).value_counts()}\n"
+                                           f"\nThe dataset was loaded correctly.\n")
     
     print(dataframe_complete_information_text)
     return dataframe

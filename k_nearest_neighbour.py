@@ -3,6 +3,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
 
 from data_partitioning_configuration import data_partitioning_strategy_names
+from encoding import normalize_dataframe_containing_features
+from utility import get_last_column_as_a_separate_dataframe
 
 class K_nearest_neighbour_conductor():
     def __init__(self, k_value, dataframe, data_partitioning_configuration):
@@ -14,9 +16,11 @@ class K_nearest_neighbour_conductor():
         return f"k = {self.k_value}"
 
     def execute_experiment(self):        
-        features = self.dataframe.drop(self.dataframe.columns[-1],axis=1)
+        features = self.dataframe.drop(get_last_column_as_a_separate_dataframe(self.dataframe),axis=1)
         # Creates a dataframe from solely the data in the last column.
-        classes = self.dataframe[self.dataframe.columns[-1]]
+        classes = get_last_column_as_a_separate_dataframe(self.dataframe)
+
+        features = normalize_dataframe_containing_features(features)
         
         if (self.data_partitioning_strategy['is_stratified'] == True):
             which_part_base_stratification_on = classes
@@ -91,6 +95,8 @@ def handle_nearest_neighbour_conductor_menu(dataframe, data_partitioning_configu
                     else:
                         print("\nThe k value must be greater than 0.\n")
             has_menu_been_exited = True
+
         else: 
             print("\nThe number of experiments to conduct must be greater than 0.\n")
+            
     return k_nearest_neighbour_conductors

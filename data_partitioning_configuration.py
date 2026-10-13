@@ -81,6 +81,6 @@ def handle_data_partitioning_menu(number_of_rows):
             data_partitioning_configuration['is_stratified'] = False
             has_menu_been_exited = True
         else:
-            print("Enter y or n.")
+            print("\n\nEnter y or n.\n\n")
 
     return data_partitioning_configuration
