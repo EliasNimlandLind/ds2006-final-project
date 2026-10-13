@@ -49,6 +49,7 @@ def handle_data_frame_menu():
             print("Enter a valid integer.\n")
 
     dataframe = pandas.read_csv(path_to_dataset_to_load)
+    normalized_features_as_a_dataframe = normalize_dataframe_containing_features(dataframe)
     
     dataframe_column_names_text = ""
     for current_feature_name in dataframe.columns[:-1]: # Using [:-1] is done to limit the iteration to item before the last one to avoid concatenate the name of the target classes.
@@ -62,7 +63,7 @@ def handle_data_frame_menu():
     dataframe_complete_information_text = (f"\n\nThe values of the 10 first rows before encoding are:\n"
                                            f"{dataframe.head(10)}\n\n"
                                            f"The values of the 10 first rows after encoding are:\n"
-                                           f"{normalize_dataframe_containing_features(dataframe.drop(get_last_column_of_dataframe(dataframe),axis=1).head(10))}\n\n"
+                                           f"{normalized_features_as_a_dataframe.drop(get_last_column_of_dataframe(dataframe),axis=1).head(10)}\n\n"
                                            f"The number of rows: {dataframe.shape[0]}\nThe number of columns: {dataframe.shape[1]}\n\n"
                                            f"The names of the features: {dataframe_column_names_text}\n\n"
                                            f"The names of the target classes are: {dataframe_target_classes_text}\n\n"

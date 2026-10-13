@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split, cross_val_score, Stratifie
 
 from data_partitioning_configuration import data_partitioning_strategy_names
 from encoding import normalize_dataframe_containing_features
-from utility import get_last_column_as_a_separate_dataframe
+from utility import get_last_column_as_a_separate_dataframe, get_last_column_of_dataframe
 
 class K_nearest_neighbour_conductor():
     def __init__(self, k_value, dataframe, data_partitioning_configuration):
@@ -16,7 +16,7 @@ class K_nearest_neighbour_conductor():
         return f"k = {self.k_value}"
 
     def execute_experiment(self):        
-        features = self.dataframe.drop(get_last_column_as_a_separate_dataframe(self.dataframe),axis=1)
+        features = self.dataframe.drop(get_last_column_of_dataframe(self.dataframe),axis=1)
         # Creates a dataframe from solely the data in the last column.
         classes = get_last_column_as_a_separate_dataframe(self.dataframe)
 
