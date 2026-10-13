@@ -19,14 +19,14 @@ class K_nearest_neighbour_conductor():
         classes = self.dataframe[self.dataframe.columns[-1]]
         
         if (self.data_partitioning_strategy['is_stratified'] == True):
-            what_to_stratify = classes
+            which_part_base_stratification_on = classes
 
         # Creates a Knn Classifier Object.
         k_neighbours_classifier = KNeighborsClassifier(n_neighbors=self.k_value)
 
         # Split the data into train/test sets 
         features_train, features_test, classes_train, classes_test = train_test_split(
-        features, classes, test_size=self.data_partitioning_strategy['testing_percentage'], random_state=10, stratify=what_to_stratify
+        features, classes, test_size=self.data_partitioning_strategy['testing_percentage'], random_state=10, stratify=which_part_base_stratification_on
         )     
 
         # Trains this Knn Classifier with the training set obtained previously:
