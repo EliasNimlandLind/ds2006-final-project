@@ -71,4 +71,4 @@ def handle_data_frame_menu():
                                            f"\nThe dataset was loaded correctly.\n")
     
     print(dataframe_complete_information_text)
-    return dataframe
+    return dataframe, normalized_features_as_a_dataframe

@@ -15,9 +15,9 @@ def main():
         
         match main_menu_input:
             case 1:
-                dataframe = handle_data_frame_menu()
+                dataframe, normalized_features_as_a_dataframe = handle_data_frame_menu()
                 data_partitioning_configuration = handle_data_partitioning_menu(dataframe.shape[0])
-                k_nearest_neighbour_conductors_without_indices = handle_nearest_neighbour_conductor_menu(dataframe, data_partitioning_configuration)
+                k_nearest_neighbour_conductors_without_indices = handle_nearest_neighbour_conductor_menu(dataframe, normalized_features_as_a_dataframe, data_partitioning_configuration)
 
                 experiment_configuration_text = ("\n*********************************************\n"
                                             "EXPERIMENT CONFIGURATION\n\n"

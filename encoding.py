@@ -12,5 +12,4 @@ def normalize_dataframe_containing_features(dataframe_to_normalize):
     for current_feature in list(dataframe_to_normalize):
         normalized_dataframe[[current_feature]] = min_max_scaler.fit_transform(dataframe_to_normalize[[current_feature]])
 
-    print(normalized_dataframe)
     return normalized_dataframe
