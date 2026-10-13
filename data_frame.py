@@ -1,22 +1,20 @@
-import os
-
 import pandas
 
-from utility import get_items_as_string_with_indices    
+from utility import get_items_as_string_with_indices, list_content_of_directory    
 
 dataframe = None
 
 
 def handle_data_frame_menu():
     datasets_directory_name = "datasets"
-    datasets_found_in_directory = os.listdir(datasets_directory_name)
+    datasets_found_in_directory = list_content_of_directory(datasets_directory_name)
     
     datasets_with_indices = get_items_as_string_with_indices(datasets_found_in_directory)
 
     dataset_selection_menu_text = ""
     for current_index, dataset in datasets_with_indices.items():
         dataset_selection_menu_text += f"\n{current_index}. {dataset}"
-    dataset_selection_menu_text += (f"\n{len(datasets_with_indices) + 1}. Another dataset.\n"
+    dataset_selection_menu_text += (f"\n{len(datasets_with_indices) + 1}. A dataset not located in the default directory.\n"
                                     "Select a dataset to load by typing the corresponding number: ")
     
     path_to_dataset_to_load = ""
