@@ -2,7 +2,7 @@ import os
 
 import pandas
 
-from encoding import normalize_dataframe_containing_features
+from data_preprocessing import encode_categorical_features, normalize_dataframe_containing_features, get_normalized_and_encoded_dataframe
 from utility import get_last_column_as_a_separate_dataframe, get_last_column_of_dataframe, get_items_as_string_with_indices, list_content_of_directory    
 
 dataframe = None
@@ -49,7 +49,7 @@ def handle_data_frame_menu():
             print("Enter a valid integer.\n")
 
     dataframe = pandas.read_csv(path_to_dataset_to_load)
-    normalized_features_as_a_dataframe = normalize_dataframe_containing_features(dataframe)
+    normalized_and_encoded_dataframe = get_normalized_and_encoded_dataframe(dataframe)
     
     dataframe_column_names_text = ""
     for current_feature_name in dataframe.columns[:-1]: # Using [:-1] is done to limit the iteration to item before the last one to avoid concatenate the name of the target classes.
@@ -60,10 +60,10 @@ def handle_data_frame_menu():
         dataframe_target_classes_text += f"\n{str(current_target_class_name)}"
 
     # Using a collection leads to high readability due to all data being viewable at once due to vertical alignment.
-    dataframe_complete_information_text = (f"\n\nThe values of the 10 first rows before encoding are:\n"
+    dataframe_complete_information_text = (f"\n\nThe values of the 10 first rows before encoding and normalization are:\n"
                                            f"{dataframe.head(10)}\n\n"
-                                           f"The values of the 10 first rows after encoding are:\n"
-                                           f"{normalized_features_as_a_dataframe.drop(get_last_column_of_dataframe(dataframe),axis=1).head(10)}\n\n"
+                                           f"The values of the 10 first rows after encoding and normalization are:\n"
+                                           f"{normalized_and_encoded_dataframe.head(10)}\n\n"
                                            f"The number of rows: {dataframe.shape[0]}\nThe number of columns: {dataframe.shape[1]}\n\n"
                                            f"The names of the features: {dataframe_column_names_text}\n\n"
                                            f"The names of the target classes are: {dataframe_target_classes_text}\n\n"
@@ -71,4 +71,4 @@ def handle_data_frame_menu():
                                            f"\nThe dataset was loaded correctly.\n")
     
     print(dataframe_complete_information_text)
-    return dataframe, normalized_features_as_a_dataframe
+    return dataframe, normalized_and_encoded_dataframe

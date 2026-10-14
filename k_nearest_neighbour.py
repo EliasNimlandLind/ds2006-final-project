@@ -3,25 +3,24 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
 
 from data_partitioning_configuration import data_partitioning_strategy_names
-from encoding import normalize_dataframe_containing_features
 from utility import get_last_column_as_a_separate_dataframe, get_last_column_of_dataframe
 
 class K_nearest_neighbour_conductor():
-    def __init__(self, k_value, dataframe, normalized_features_as_a_dataframe, data_partitioning_configuration):
+    def __init__(self, k_value, dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration):
         self.k_value = k_value
         self.dataframe = dataframe
-        self.normalized_features_as_a_dataframe = normalized_features_as_a_dataframe
+        self.normalized_and_encoded_dataframe = normalized_and_encoded_dataframe
         self.data_partitioning_strategy = data_partitioning_configuration
 
     def __str__(self):
         return f"k = {self.k_value}"
 
     def execute_experiment(self):        
-        features = self.dataframe.drop(get_last_column_of_dataframe(self.dataframe),axis=1)
+        features = self.normalized_and_encoded_dataframe.drop(get_last_column_of_dataframe(self.normalized_and_encoded_dataframe),axis=1)
         # Creates a dataframe from solely the data in the last column.
         classes = get_last_column_as_a_separate_dataframe(self.dataframe)
 
-        features = self.normalized_features_as_a_dataframe
+        features = self.normalized_and_encoded_dataframe
         
         if (self.data_partitioning_strategy['is_stratified'] == True):
             which_part_base_stratification_on = classes
@@ -68,7 +67,7 @@ class K_nearest_neighbour_conductor():
             
         self.k_neighbours_classifier = k_neighbours_classifier
 
-def handle_nearest_neighbour_conductor_menu(dataframe, normalized_features_as_a_dataframe, data_partitioning_configuration):
+def handle_nearest_neighbour_conductor_menu(dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration):
     k_nearest_neighbour_conductors = []
 
     has_menu_been_exited = False
@@ -90,7 +89,7 @@ def handle_nearest_neighbour_conductor_menu(dataframe, normalized_features_as_a_
                         print("\nThe current k value must be an integer.\n")
 
                     if (current_k_value > 0):
-                        current_k_nearest_neighbour_conductor = K_nearest_neighbour_conductor(current_k_value, dataframe, normalized_features_as_a_dataframe, data_partitioning_configuration)
+                        current_k_nearest_neighbour_conductor = K_nearest_neighbour_conductor(current_k_value, dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration)
                         k_nearest_neighbour_conductors.append(current_k_nearest_neighbour_conductor)
                         is_current_k_value_valid = True
                     else:
