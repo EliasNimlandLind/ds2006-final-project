@@ -38,7 +38,7 @@ def main():
 
                 for current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_without_indices:
                     current_k_nearest_neighbour_conductor.execute_experiment()
-
+            
             case 3:
                 print("\nExiting...\n")
                 has_menu_been_exited = True
