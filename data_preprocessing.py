@@ -24,8 +24,8 @@ def encode_categorical_features(dataframe_to_encode):
 
     nominal_features = ['Gender', 'family_history_with_overweight','SMOKE', 'FAVC', 'SCC', 'MTRANS']
 
-    categorical_transformer = ColumnTransformer(transformers=[('ordinal',OrdinalEncoder(categories=ordinal_categories), ordinal_features),
-                                                              ('nominal',OneHotEncoder(sparse_output=False),nominal_features)]) # sparse_output = False ensures the result will be in the correct format.
+    categorical_transformer = ColumnTransformer(transformers=[('ordinal', OrdinalEncoder(categories=ordinal_categories), ordinal_features),
+                                                              ('nominal', OneHotEncoder(sparse_output=False),nominal_features)]) # sparse_output = False ensures the result will be in the correct format.
     categorical_transformer.set_output(transform="pandas")
 
     encoded_dataframe = categorical_transformer.fit_transform(dataframe_to_encode)
