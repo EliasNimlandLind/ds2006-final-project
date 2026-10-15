@@ -54,12 +54,22 @@ class K_nearest_neighbour_conductor():
             model_statistics = f"\n{str(self)}"
             for current_score_type in score_types:
                 scores = ""
-                
+
+                # Experimental way
+                cv = None
                 if self.data_partitioning_strategy["is_stratified"] == False:
-                    scores = cross_val_score(k_neighbours_classifier, X=features, y=classes, cv=self.data_partitioning_strategy['number_of_folds'], scoring=current_score_type)
+                    cv = self.data_partitioning_strategy['number_of_folds']
                 else:
-                    stratified_folds = StratifiedKFold(n_splits=self.data_partitioning_strategy['number_of_folds'])
-                    scores = cross_val_score(k_neighbours_classifier, X=features, y=classes, cv=stratified_folds, scoring=current_score_type)
+                    cv = StratifiedKFold(n_splits=self.data_partitioning_strategy['number_of_folds'])
+
+                scores = cross_val_score(k_neighbours_classifier, X=features, y=classes, cv=cv, scoring=current_score_type)
+                
+                # Old way 
+                # if self.data_partitioning_strategy["is_stratified"] == False:
+                #    scores = cross_val_score(k_neighbours_classifier, X=features, y=classes, cv=self.data_partitioning_strategy['number_of_folds'], scoring=current_score_type)
+                # else:
+                #    stratified_folds = StratifiedKFold(n_splits=self.data_partitioning_strategy['number_of_folds'])
+                #    scores = cross_val_score(k_neighbours_classifier, X=features, y=classes, cv=stratified_folds, scoring=current_score_type)
                     
                 model_statistics += f"\n{current_score_type}:\n    {scores}\n    Mean: {scores.mean()}\n"
 
