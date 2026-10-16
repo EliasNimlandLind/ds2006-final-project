@@ -4,6 +4,9 @@
 
 This was my final project for the course called Introduction to data science with the code DS2006.
 
+## Features
+- Conduct and configure the training of multiple machine learning models. 
+
 ## Technology stack
 
 - Python
@@ -13,7 +16,7 @@ This was my final project for the course called Introduction to data science wit
 
 ## Setup
 
-1. Create a directory called `datasets` in the project root to enable automatic dataset detection. If this feature is not desired, go to the third step.
+1. Create a directory called `datasets` in the project root or the directory will be created during startup to enable automatic dataset detection. If feature is not desired, go to the third step.
 2. Add CSV files containing datasets to the previously created directory.
 3. Install the required dependencies by executing:
 

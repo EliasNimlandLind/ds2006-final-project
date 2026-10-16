@@ -9,7 +9,7 @@ def main():
 
     while has_menu_been_exited == False:
         try:
-            main_menu_input = int(input("1. Load a dataset and create a configuration for the experiments.\n2. Conduct experiments.\n3. Exit the application.\nEnter the choice of how to continue, as an integer: "))
+            main_menu_input = int(input("1. Load a dataset and create a configuration for the experiments.\n2. Conduct experiments.\n3. Show confusion matrix.\n0. Exit the application.\nEnter the choice of how to continue, as an integer: "))
         except:
             print("\nThe choice must be specified as an integer.\n")
         
@@ -40,9 +40,28 @@ def main():
                     current_k_nearest_neighbour_conductor.execute_experiment()
             
             case 3:
+                has_menu_been_exited = False
+                while has_menu_been_exited == False:
+                    confusion_matrix_index_input = 0
+                    try:
+                        confusion_matrix_index_input = int(input("Enter the number corresponing to the experiment for which you want to display the associated confusion matrix. Avoid this by enter '0': "))
+                    except:
+                        print("\nThe number of experiments to conduct must be an integer.\n")
+
+                    if not k_nearest_neighbour_conductors_without_indices: # This is used to check if the list is empty, and a message is displayed if the list is empty. 
+                        print("\n Experiments must be conducted before display the corresponding confusion matrices.\n")
+                        continue
+        
+                    if 0 < confusion_matrix_index_input <= len(k_nearest_neighbour_conductors_with_indices.items()):
+                        k_nearest_neighbour_conductors_with_indices[confusion_matrix_index_input].display_confusion_matrix()
+                                     
+                    else:
+                        print(f"\nThe number must be between 0 and the number of experiemnts, i.e.{len(k_nearest_neighbour_conductors_with_indices.items())}\n")
+
+            case 0:
                 print("\nExiting...\n")
                 has_menu_been_exited = True
-
+                
             case _:
                 print("\nInvalid choice. The integer must correspond to one of the stated choices.\n")
 
