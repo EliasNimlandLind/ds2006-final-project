@@ -90,7 +90,7 @@ def main():
                         save_file_text += "\nRaw\n"
                         save_file_text += dataframe.head(dataframe_row_count).to_string()
 
-                        save_file_text += f"\Normalised and encoded\n"
+                        save_file_text += f"\nNormalised and encoded\n"
                         save_file_text += normalized_and_encoded_dataframe.head(dataframe_row_count).to_string()
 
                         
