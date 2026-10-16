@@ -44,7 +44,7 @@ def main():
                 while has_menu_been_exited == False:
                     confusion_matrix_index_input = 0
                     try:
-                        confusion_matrix_index_input = int(input("Enter the number corresponing to the experiment for which you want to display the associated confusion matrix. Avoid this by enter '0': "))
+                        confusion_matrix_index_input = int(input("Enter the number corresponding to the experiment for which you want to display the associated confusion matrix. Avoid this by enter '0': "))
                     except:
                         print("\nThe number of experiments to conduct must be an integer.\n")
 
@@ -54,9 +54,9 @@ def main():
         
                     if 0 < confusion_matrix_index_input <= len(k_nearest_neighbour_conductors_with_indices.items()):
                         k_nearest_neighbour_conductors_with_indices[confusion_matrix_index_input].display_confusion_matrix()
-                                     
+                        has_menu_been_exited = True
                     else:
-                        print(f"\nThe number must be between 0 and the number of experiemnts, i.e.{len(k_nearest_neighbour_conductors_with_indices.items())}\n")
+                        print(f"\nThe number must be between 0 and the number of experiments, i.e.{len(k_nearest_neighbour_conductors_with_indices.items())}\n")
 
             case 0:
                 print("\nExiting...\n")

@@ -1,6 +1,7 @@
-from sklearn.metrics import ConfusionMatrixDisplay, accuracy_score, classification_report
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, classification_report
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
+import matplotlib.pyplot as mathplotlib
 
 from data_partitioning_configuration import data_partitioning_strategy_names
 from utility import get_last_column_as_a_separate_dataframe, get_last_column_of_dataframe
@@ -16,12 +17,12 @@ class K_nearest_neighbour_conductor():
         return f"k = {self.k_value}"
 
     def display_confusion_matrix(self):
-             confusion_matrix_display = ConfusionMatrixDisplay.from_predictions(self.k_neighbours_classifier,
-                                                                              self.X,
-                                                                              self.y,
-                                                                              display_labels=self.classes)
+        confusion_matrix_data = confusion_matrix(self.classes_test, self.predictions)
+        confusion_matrix_display = ConfusionMatrixDisplay(confusion_matrix=confusion_matrix_data)
+        confusion_matrix_display.plot(cmap=mathplotlib.cm.Blues)
+        mathplotlib.title('Confusion Matrix')
+        mathplotlib.show()
 
-             print(confusion_matrix_display.confusion_matrix)     
 
     def execute_experiment(self):        
         features = self.normalized_and_encoded_dataframe.drop(get_last_column_of_dataframe(self.normalized_and_encoded_dataframe),axis=1)
@@ -73,21 +74,14 @@ class K_nearest_neighbour_conductor():
                     cv = StratifiedKFold(n_splits=self.data_partitioning_strategy['number_of_folds'])
 
                 scores = cross_val_score(k_neighbours_classifier, X=features, y=classes, cv=cv, scoring=current_score_type)
-                
-                # Old way 
-                # if self.data_partitioning_strategy["is_stratified"] == False:
-                #    scores = cross_val_score(k_neighbours_classifier, X=features, y=classes, cv=self.data_partitioning_strategy['number_of_folds'], scoring=current_score_type)
-                # else:
-                #    stratified_folds = StratifiedKFold(n_splits=self.data_partitioning_strategy['number_of_folds'])
-                #    scores = cross_val_score(k_neighbours_classifier, X=features, y=classes, cv=stratified_folds, scoring=current_score_type)
-                    
+                  
                 model_statistics += f"\n{current_score_type}:\n    {scores}\n    Mean: {scores.mean()}\n"
 
         print(model_statistics)
             
         self.k_neighbours_classifier = k_neighbours_classifier
-        self.X = classes_test
-        self.y = predictions
+        self.classes_test = classes_test
+        self.predictions = predictions
 
 def handle_nearest_neighbour_conductor_menu(dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration):
     k_nearest_neighbour_conductors = []
