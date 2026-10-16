@@ -33,31 +33,37 @@ def main():
             
             case 2:
                 if not k_nearest_neighbour_conductors_without_indices: # This is used to check if the list is empty, and a message is displayed if the list is empty. 
-                    print("\nA configuration for experiments was not found.\n")
+                    print("\nA configuration for the experiments was not found.\n")
                     continue
 
                 for current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_without_indices:
                     current_k_nearest_neighbour_conductor.execute_experiment()
             
             case 3:
-                has_menu_been_exited = False
-                while has_menu_been_exited == False:
-                    confusion_matrix_index_input = 0
-                    try:
-                        confusion_matrix_index_input = int(input("Enter the number corresponding to the experiment for which you want to display the associated confusion matrix. Avoid this by enter '0': "))
-                    except:
-                        print("\nThe number of experiments to conduct must be an integer.\n")
-
-                    if not k_nearest_neighbour_conductors_without_indices: # This is used to check if the list is empty, and a message is displayed if the list is empty. 
-                        print("\n Experiments must be conducted before display the corresponding confusion matrices.\n")
-                        continue
-        
-                    if 0 < confusion_matrix_index_input <= len(k_nearest_neighbour_conductors_with_indices.items()):
-                        k_nearest_neighbour_conductors_with_indices[confusion_matrix_index_input].display_confusion_matrix()
-                        has_menu_been_exited = True
-                    else:
-                        print(f"\nThe number must be between 0 and the number of experiments, i.e.{len(k_nearest_neighbour_conductors_with_indices.items())}\n")
-
+                confusion_matrix_experiments_status_error = "\nExperiments must be conducted before display the corresponding confusion matrices.\n"
+                try:
+                    has_menu_been_exited = False
+                    while has_menu_been_exited == False:
+                        k_nearest_neighbour_conductors_with_indices_as_text = ""
+                        for current_index, current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_with_indices.items():
+                            k_nearest_neighbour_conductors_with_indices_as_text += f"{current_index}. {str(current_k_nearest_neighbour_conductor)}\n"
+                        
+                        print(k_nearest_neighbour_conductors_with_indices_as_text)    
+                        
+                        confusion_matrix_index_input = 0
+                        try:
+                            confusion_matrix_index_input = int(input("Enter the number corresponding to the experiment for which you want to display the associated confusion matrix. Avoid this by enter '0': "))
+                        except:
+                            print("\nThe number representing an experiment must be an integer.\n")
+                            
+                        if 0 < confusion_matrix_index_input <= len(k_nearest_neighbour_conductors_with_indices.items()):
+                            k_nearest_neighbour_conductors_with_indices[confusion_matrix_index_input].display_confusion_matrix()
+                            has_menu_been_exited = True
+                        else:
+                            print(f"\nThe number must be between 0 and the number of experiments, i.e.{len(k_nearest_neighbour_conductors_with_indices.items())}\n")
+                
+                except:
+                    print(confusion_matrix_experiments_status_error)
             case 0:
                 print("\nExiting...\n")
                 has_menu_been_exited = True

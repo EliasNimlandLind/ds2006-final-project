@@ -74,7 +74,7 @@ class K_nearest_neighbour_conductor():
                     cv = StratifiedKFold(n_splits=self.data_partitioning_strategy['number_of_folds'])
 
                 scores = cross_val_score(k_neighbours_classifier, X=features, y=classes, cv=cv, scoring=current_score_type)
-                  
+        
                 model_statistics += f"\n{current_score_type}:\n    {scores}\n    Mean: {scores.mean()}\n"
 
         print(model_statistics)
