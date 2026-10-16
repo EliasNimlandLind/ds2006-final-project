@@ -9,15 +9,20 @@ def main():
 
     while has_menu_been_exited == False:
         try:
-            main_menu_input = int(input("1. Load a dataset and create a configuration for the experiments.\n2. Conduct experiments.\n3. Show confusion matrix.\n0. Exit the application.\nEnter the choice of how to continue, as an integer: "))
+            main_menu_input = int(input(("1. Load a dataset and create a configuration for the experiments."
+                                         "\n2. Conduct experiments."
+                                         "\n3. Show confusion matrix."
+                                         "\n4. Save data to file."
+                                         "\n0. Exit the application."
+                                         "\nEnter the choice of how to continue, as an integer: ")))
         except:
             print("\nThe choice must be specified as an integer.\n")
         
         match main_menu_input:
             case 1:
-                dataframe, normalized_features_as_a_dataframe = handle_data_frame_menu()
+                dataframe, normalized_and_encoded_dataframe = handle_data_frame_menu()
                 data_partitioning_configuration = handle_data_partitioning_menu(dataframe.shape[0])
-                k_nearest_neighbour_conductors_without_indices = handle_nearest_neighbour_conductor_menu(dataframe, normalized_features_as_a_dataframe, data_partitioning_configuration)
+                k_nearest_neighbour_conductors_without_indices = handle_nearest_neighbour_conductor_menu(dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration)
 
                 experiment_configuration_text = ("\n*********************************************\n"
                                             "EXPERIMENT CONFIGURATION\n\n"
@@ -64,6 +69,41 @@ def main():
                 
                 except:
                     print(confusion_matrix_experiments_status_error)
+
+            case 4:
+                try:  
+                    file_name_input = input("Enter the file name that will contain all data: ")
+                    complete_file_name = file_name_input
+                    file_extension = ".txt"
+
+                    if complete_file_name == "":
+                        complete_file_name = f"experiments_save_file{file_extension}"
+
+                    if not complete_file_name.endswith(file_extension):
+                        complete_file_name += file_extension
+                    
+                    with open(complete_file_name, "w") as save_file:
+                        save_file_text = ""
+
+                        dataframe_row_count = 50
+                        save_file_text += f"\nDataframes - First {dataframe_row_count} rows\n"
+                        save_file_text += "\nRaw\n"
+                        save_file_text += dataframe.head(dataframe_row_count).to_string()
+
+                        save_file_text += f"\Normalised and encoded\n"
+                        save_file_text += normalized_and_encoded_dataframe.head(dataframe_row_count).to_string()
+
+                        
+
+                        save_file_text += "\n\nData partitioning configuration\n\n"
+                        for current_configuration_name, current_configuration_value in data_partitioning_configuration.items():
+                            save_file_text += f"{current_configuration_name}: {current_configuration_value}\n"
+                        
+                        save_file.write(save_file_text)
+                        
+                        print("\nSuccessful saving data.\n")
+                except Exception as exception:
+                    print(f"\nError: {exception}\n")
             case 0:
                 print("\nExiting...\n")
                 has_menu_been_exited = True
