@@ -93,7 +93,6 @@ def main():
                         save_file_text += f"\nNormalised and encoded\n"
                         save_file_text += normalized_and_encoded_dataframe.head(dataframe_row_count).to_string()
 
-                        
 
                         save_file_text += "\n\nData partitioning configuration\n\n"
                         for current_configuration_name, current_configuration_value in data_partitioning_configuration.items():
@@ -101,7 +100,7 @@ def main():
                         
                         save_file.write(save_file_text)
                         
-                        print("\nSuccessful saving data.\n")
+                        print("\\The data was successfully saved.\n")
                 except Exception as exception:
                     print(f"\nError: {exception}\n")
             case 0:

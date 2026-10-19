@@ -2,7 +2,7 @@ import os
 
 import pandas
 
-from data_preprocessing import encode_categorical_features, normalize_dataframe_containing_features, get_normalized_and_encoded_dataframe
+from data_preprocessing import encode_categorical_dataframe, normalize_numerical_dataframe, get_normalized_and_encoded_dataframe
 from utility import get_last_column_as_a_separate_dataframe, get_last_column_of_dataframe, get_items_as_string_with_indices, list_content_of_directory    
 
 dataframe = None

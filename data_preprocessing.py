@@ -5,7 +5,7 @@ from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
 import pandas
 import numpy
 
-def normalize_dataframe_containing_features(dataframe_to_normalize):
+def normalize_numerical_dataframe(dataframe_to_normalize):
     """
     This ensures the distances calculated by the model are contributing equally, regardless of units.
     """
@@ -18,7 +18,7 @@ def normalize_dataframe_containing_features(dataframe_to_normalize):
     
     return normalized_dataframe
 
-def encode_categorical_features(dataframe_to_encode):
+def encode_categorical_dataframe(dataframe_to_encode):
     ordinal_categories = [["no", "Sometimes", "Frequently", "Always"],["no", "Sometimes", "Frequently", "Always"]]
     ordinal_features = ['CAEC', 'CALC']
 
@@ -39,11 +39,16 @@ def get_normalized_and_encoded_dataframe(dataframe):
 
     Returns: A dataframe containing the normalized data in addition to the encoded data.
     """
+    # This gets all features which are numbers from the dataframe.
     raw_numerical_sub_dataframe = dataframe.select_dtypes(include=[numpy.number])
-    normalized_sub_dataframe = normalize_dataframe_containing_features(raw_numerical_sub_dataframe)
-        
+    normalized_sub_dataframe = normalize_numerical_dataframe(raw_numerical_sub_dataframe)
+
+    # This gets all features which are not numbers from the dataframe.
     raw_categorical_sub_dataframe = dataframe.select_dtypes(exclude=[numpy.number])
-    encoded_categorical_sub_dataframe = encode_categorical_features(raw_categorical_sub_dataframe)
+    encoded_categorical_sub_dataframe = encode_categorical_dataframe(raw_categorical_sub_dataframe)
+    # This done to ensure all values are contained in the same range, i.e. 0 - 1. 
+    # Thus, avoiding the ordinal features being contained in another range, e.g. 1 - 3, while all other feature being contained as described above.
+    encoded_categorical_sub_dataframe = normalize_numerical_dataframe(encoded_categorical_sub_dataframe)
     
     normalized_and_encoded_dataframe = pandas.concat([normalized_sub_dataframe, encoded_categorical_sub_dataframe], axis=1)
     return normalized_and_encoded_dataframe
