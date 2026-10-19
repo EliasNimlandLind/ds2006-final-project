@@ -5,7 +5,15 @@
 This was my final project for the course called Introduction to data science with the code DS2006.
 
 ## Features
-- Conduct and configure the training of multiple machine learning models.
+- Train and manage commob machine learning models, including calculing statistics and reports.
+- Data processing:
+  - Encoding
+  - Normalisation
+  - Anomaly detection 
+- Save and load:
+  - Models
+  - Pipelines
+  - Configurations
 
 ## Technology stack
 
