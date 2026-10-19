@@ -22,7 +22,7 @@ This was my final project for the course called Introduction to data science wit
 2. Add CSV files containing datasets to the previously created directory.
 3. Dasets containing categorical features requires additional configuration, which can be accomplished through two alternatives:
     - The first alternative is to rename 'sample.dataset_configuration.json'in the directory called `configuration` to `dataset_configuration.json'. Define each feature based on the sample, which should be removed. 
-    - The second alternative is to follow the instructions which are displayed if no configuration is found, while categorical features are found in the datasets.
+    - The second alternative is to follow the instructions displayed if no configuration is found, while categorical features are found in the datasets, during startup.
 4. Install the required dependencies by executing:
 
 ```bash
