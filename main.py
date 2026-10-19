@@ -97,10 +97,12 @@ def main():
                         save_file_text += "\n\nData partitioning configuration\n\n"
                         for current_configuration_name, current_configuration_value in data_partitioning_configuration.items():
                             save_file_text += f"{current_configuration_name}: {current_configuration_value}\n"
+
+
                         
                         save_file.write(save_file_text)
                         
-                        print("\\The data was successfully saved.\n")
+                        print("\The data was successfully saved.\n")
                 except Exception as exception:
                     print(f"\nError: {exception}\n")
             case 0:
