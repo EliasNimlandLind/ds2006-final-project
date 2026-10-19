@@ -12,8 +12,8 @@ def handle_data_partitioning_menu(number_of_rows):
         'is_stratified': True,
         'data_partitioning_strategy_name': data_partitioning_strategy_names.TRAIN_TEST_SPLIT,
         'number_of_folds': 0,
-        'training_percentage': 0,
-        'testing_percentage': 0
+        'training_percentage': 0.8,
+        'testing_percentage': 0.2
     }
 
     partitioning_strategy_names_with_indices = get_items_as_string_with_indices(data_partitioning_strategy_names)
@@ -21,15 +21,23 @@ def handle_data_partitioning_menu(number_of_rows):
     data_partitioning_strategy_selection_menu_text = ""
     for current_index, current_partitioning_strategy in partitioning_strategy_names_with_indices.items():
         data_partitioning_strategy_selection_menu_text += f"\n{current_index}. {current_partitioning_strategy.value}"
+
+    default_data_partitioning_configuration_index = len(partitioning_strategy_names_with_indices.keys()) + 1
+    data_partitioning_strategy_selection_menu_text += f"\n{default_data_partitioning_configuration_index}. Use the default configuration.\n"
     data_partitioning_strategy_selection_menu_text += "\nSelect a partitioning strategy to use by typing the corresponding number: "
 
     has_menu_been_exited = False
     while has_menu_been_exited == False:
         input_data_partitioning_strategy_selection = 0
+
         try:
             input_data_partitioning_strategy_selection = int(input(data_partitioning_strategy_selection_menu_text))
         except: 
             print("\nEnter an integer.\n")
+
+        if input_data_partitioning_strategy_selection == default_data_partitioning_configuration_index:
+            return data_partitioning_configuration
+        
         if (0 < input_data_partitioning_strategy_selection <= len(partitioning_strategy_names_with_indices)):
             data_partitioning_configuration['data_partitioning_strategy_name'] = partitioning_strategy_names_with_indices[input_data_partitioning_strategy_selection].value
 
@@ -51,7 +59,6 @@ def handle_data_partitioning_menu(number_of_rows):
                     has_menu_been_exited = True
                 else:
                     print("training split input + testing split input != 100%")
-                
                 
                 if (data_partitioning_configuration['data_partitioning_strategy_name'] == data_partitioning_strategy_names.K_FOLD_CROSS_VALIDATION.value):
                     number_of_k_fold_input = 0

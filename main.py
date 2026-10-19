@@ -122,7 +122,8 @@ def main():
                     print(str(current_k_nearest_neighbour_conductor))            
 
             case 6:
-                pass
+                for current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_without_indices:
+                    print(current_k_nearest_neighbour_conductor.get_k_value_text)    
             
             case 0:
                 print("\nExiting...\n")
