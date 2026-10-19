@@ -13,7 +13,7 @@ class K_nearest_neighbour_conductor():
         self.normalized_and_encoded_dataframe = normalized_and_encoded_dataframe
         self.data_partitioning_strategy = data_partitioning_configuration
         
-    def get_k_string(self):
+    def get_k_value_text(self):
         return f"k = {self.k_value}"
 
     def __str__(self):
@@ -21,7 +21,7 @@ class K_nearest_neighbour_conductor():
         
         if (self.data_partitioning_strategy['data_partitioning_strategy_name'] == data_partitioning_strategy_names.TRAIN_TEST_SPLIT.value):
                 # Obtains the predictions from the kNN classifier:
-                model_statistics = (f"\n{self.get_k_string()}\n"
+                model_statistics = (f"\n{self.get_k_value_text()}\n"
                                         f"Accuracy: {accuracy_score(self.classes_test, self.predictions)}\n\n"
                                         f"  {classification_report(self.classes_test, self.predictions)}\n\n"
                                         )
@@ -31,7 +31,7 @@ class K_nearest_neighbour_conductor():
                             "recall_micro", 
                             "f1_micro"]
             
-            model_statistics = f"\n{self.get_k_string()}"
+            model_statistics = f"\n{self.get_k_value_text()}"
             for current_score_type in score_types:
                 scores = ""
                 cv = None
@@ -47,18 +47,26 @@ class K_nearest_neighbour_conductor():
         return model_statistics
 
     def display_confusion_matrix(self):
-        confusion_matrix_data = confusion_matrix(self.classes_test, self.predictions)
-        confusion_matrix_display = ConfusionMatrixDisplay(confusion_matrix=confusion_matrix_data)
-        confusion_matrix_display.plot(cmap=mathplotlib.cm.Blues)
-        mathplotlib.title('Confusion Matrix')
-        mathplotlib.show()
+        try:
+            confusion_matrix_display = ConfusionMatrixDisplay.from_estimator(
+                self.k_neighbours_classifier,
+                self.features_test,
+                self.classes_test,
+                cmap=mathplotlib.cm.Blues,
+                normalize="true"
+            )
+            confusion_matrix_display.ax_.set_title("Confusion matrix")
+            mathplotlib.show()
 
+        except Exception as exception:
+            print(exception)
+        
     def execute_experiment(self):        
-        features = self.normalized_and_encoded_dataframe.drop(get_last_column_of_dataframe(self.normalized_and_encoded_dataframe),axis=1)
+        features = self.normalized_and_encoded_dataframe.drop(get_last_column_of_dataframe(self.normalized_and_encoded_dataframe), axis=1)
         # Creates a dataframe from solely the data in the last column.
         classes = get_last_column_as_a_separate_dataframe(self.dataframe)
 
-        features = self.normalized_and_encoded_dataframe
+        #features = self.normalized_and_encoded_dataframe
         
         if (self.data_partitioning_strategy['is_stratified'] == True):
             which_part_base_stratification_on = classes
@@ -67,13 +75,14 @@ class K_nearest_neighbour_conductor():
         features_train, features_test, classes_train, classes_test = train_test_split(
         features, classes, test_size=self.data_partitioning_strategy['testing_percentage'], random_state=10, stratify=which_part_base_stratification_on
         )   
-        
+
+        self.features_test = features_test
+
         self.classes = classes
         self.classes_test = classes_test
         
         # Creates a Knn Classifier Object.
         self.k_neighbours_classifier = KNeighborsClassifier(n_neighbors=self.k_value)
-        
         # Trains this Knn Classifier with the training set obtained previously:
         self.k_neighbours_classifier.fit(features_train, classes_train)
         self.predictions = self.k_neighbours_classifier.predict(features_test)

@@ -13,7 +13,8 @@ def main():
                                          "2. Conduct experiments.\n"
                                          "3. Show confusion matrix.\n"
                                          "4. Save data to file.\n"
-                                         "5. Display model statistics\n"
+                                         "5. Display model statistics.\n"
+                                         "6. Classify an unforeseen sample.\n"
                                          "0. Exit the application.\n"
                                          "Enter the choice of how to continue, as an integer: ")))
         except:
@@ -33,7 +34,7 @@ def main():
 
                 k_nearest_neighbour_conductors_with_indices = get_items_as_string_with_indices(k_nearest_neighbour_conductors_without_indices)
                 for current_index, current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_with_indices.items():
-                    experiment_configuration_text += f"Experiment: {current_index} {current_k_nearest_neighbour_conductor.get_k_string()}\n"  
+                    experiment_configuration_text += f"Experiment: {current_index} {current_k_nearest_neighbour_conductor.get_k_value_text()}\n"  
                 experiment_configuration_text += "*********************************************"
                 print(experiment_configuration_text)
             
@@ -54,13 +55,13 @@ def main():
                     while has_menu_been_exited == False:
                         k_nearest_neighbour_conductors_with_indices_as_text = ""
                         for current_index, current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_with_indices.items():
-                            k_nearest_neighbour_conductors_with_indices_as_text += f"{current_index}. {str(current_k_nearest_neighbour_conductor)}\n"
+                            k_nearest_neighbour_conductors_with_indices_as_text += f"{current_index}. {current_k_nearest_neighbour_conductor.get_k_value_text()}\n"
                         
                         print(k_nearest_neighbour_conductors_with_indices_as_text)    
                         
                         confusion_matrix_index_input = 0
                         try:
-                            confusion_matrix_index_input = int(input("Enter the number corresponding to the experiment for which you want to display the associated confusion matrix. Avoid this by enter '0': "))
+                            confusion_matrix_index_input = int(input("Enter the number corresponding to the experiment for which you want to display the associated confusion matrix: "))
                         except:
                             print("\nThe number representing an experiment must be an integer.\n")
                             
@@ -110,7 +111,7 @@ def main():
                         
                         print("\nThe data was successfully saved.\n")
                 except Exception as exception:
-                    print(f"\nError: {exception}\n")
+                    print(f"\n{exception}\n")
 
             case 5:
                 if not k_nearest_neighbour_conductors_without_indices:
@@ -119,6 +120,9 @@ def main():
 
                 for current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_without_indices:
                     print(str(current_k_nearest_neighbour_conductor))            
+
+            case 6:
+                pass
             
             case 0:
                 print("\nExiting...\n")
