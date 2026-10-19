@@ -21,7 +21,7 @@ This was my final project for the course called Introduction to data science wit
 1. Create a directory called `datasets` in the project root or the directory will be created during startup to enable automatic dataset detection. If feature is not desired, go to the third step.
 2. Add CSV files containing datasets to the previously created directory.
 3. Dasets containing categorical features requires additional configuration, which can be accomplished through two alternatives:
-    - Rename `sample.dataset_configuration.json` in the directory called `configuration` to `dataset_configuration.json'. Define each feature based on the sample, which should be removed. 
+    - Rename `sample.dataset_configuration.json` in the directory called `configuration` to `dataset_configuration.json`. Define each feature based on the sample, which should be removed. 
     - The second alternative is to follow the instructions displayed if no configuration is found, while categorical features are found in the datasets, during startup.
 4. Install the required dependencies by executing:
 
