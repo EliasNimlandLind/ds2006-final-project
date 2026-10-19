@@ -23,7 +23,6 @@ class K_nearest_neighbour_conductor():
         mathplotlib.title('Confusion Matrix')
         mathplotlib.show()
 
-
     def execute_experiment(self):        
         features = self.normalized_and_encoded_dataframe.drop(get_last_column_of_dataframe(self.normalized_and_encoded_dataframe),axis=1)
         # Creates a dataframe from solely the data in the last column.
