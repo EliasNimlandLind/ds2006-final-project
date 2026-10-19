@@ -9,12 +9,13 @@ def main():
 
     while has_menu_been_exited == False:
         try:
-            main_menu_input = int(input(("1. Load a dataset and create a configuration for the experiments."
-                                         "\n2. Conduct experiments."
-                                         "\n3. Show confusion matrix."
-                                         "\n4. Save data to file."
-                                         "\n0. Exit the application."
-                                         "\nEnter the choice of how to continue, as an integer: ")))
+            main_menu_input = int(input(("1. Load a dataset and create a configuration for the experiments.\n"
+                                         "2. Conduct experiments.\n"
+                                         "3. Show confusion matrix.\n"
+                                         "4. Save data to file.\n"
+                                         "5. Display model statistics\n"
+                                         "0. Exit the application.\n"
+                                         "Enter the choice of how to continue, as an integer: ")))
         except:
             print("\nThe choice must be specified as an integer.\n")
         
@@ -32,7 +33,7 @@ def main():
 
                 k_nearest_neighbour_conductors_with_indices = get_items_as_string_with_indices(k_nearest_neighbour_conductors_without_indices)
                 for current_index, current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_with_indices.items():
-                    experiment_configuration_text += f"Experiment: {current_index} {str(current_k_nearest_neighbour_conductor)}\n"  
+                    experiment_configuration_text += f"Experiment: {current_index} {current_k_nearest_neighbour_conductor.get_k_string()}\n"  
                 experiment_configuration_text += "*********************************************"
                 print(experiment_configuration_text)
             
@@ -43,6 +44,8 @@ def main():
 
                 for current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_without_indices:
                     current_k_nearest_neighbour_conductor.execute_experiment()
+
+                print("\nThe experiments were successfully conducted.\n")
             
             case 3:
                 confusion_matrix_experiments_status_error = "\nExperiments must be conducted before display the corresponding confusion matrices.\n"
@@ -82,29 +85,41 @@ def main():
                     if not complete_file_name.endswith(file_extension):
                         complete_file_name += file_extension
                     
-                    with open(complete_file_name, "w") as save_file:
-                        save_file_text = ""
-
+                    with open(complete_file_name, mode="w") as save_file:
                         dataframe_row_count = 50
-                        save_file_text += f"\nDataframes - First {dataframe_row_count} rows\n"
-                        save_file_text += "\nRaw\n"
-                        save_file_text += dataframe.head(dataframe_row_count).to_string()
+                        save_file_dataframes_text = f"Dataframes - First {dataframe_row_count} rows\n"
+                        save_file_dataframes_text += "\nRaw\n"
+                        save_file_dataframes_text += f"{dataframe.head(dataframe_row_count).to_string()}\n"
 
-                        save_file_text += f"\nNormalised and encoded\n"
-                        save_file_text += normalized_and_encoded_dataframe.head(dataframe_row_count).to_string()
+                        save_file_dataframes_text += f"\nNormalised and encoded\n"
+                        save_file_dataframes_text += normalized_and_encoded_dataframe.head(dataframe_row_count).to_string()
 
+                        save_file.write(save_file_dataframes_text)
 
-                        save_file_text += "\n\nData partitioning configuration\n\n"
+                        save_file_data_partitioning_text = "\n\nData partitioning configuration\n\n"
                         for current_configuration_name, current_configuration_value in data_partitioning_configuration.items():
-                            save_file_text += f"{current_configuration_name}: {current_configuration_value}\n"
+                            save_file_data_partitioning_text += f"{current_configuration_name}: {current_configuration_value}\n"
 
+                        save_file.write(save_file_data_partitioning_text)
 
+                        save_file_model_text = "\nThe models\n\n"
+                        for current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_without_indices:
+                            save_file_model_text += str(current_k_nearest_neighbour_conductor)
                         
-                        save_file.write(save_file_text)
+                        save_file.write(save_file_model_text)
                         
-                        print("\The data was successfully saved.\n")
+                        print("\nThe data was successfully saved.\n")
                 except Exception as exception:
                     print(f"\nError: {exception}\n")
+
+            case 5:
+                if not k_nearest_neighbour_conductors_without_indices:
+                    print("\nResults from experiments are required to display statistics.\n")
+                    continue
+
+                for current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_without_indices:
+                    print(str(current_k_nearest_neighbour_conductor))            
+            
             case 0:
                 print("\nExiting...\n")
                 has_menu_been_exited = True
