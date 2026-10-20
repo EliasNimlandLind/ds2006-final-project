@@ -165,38 +165,17 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_
                 print("\nThe number representing an option must be an integer.\n")
             
             raw_dataframe_loaded_from_file = pandas.read_csv("datasets/unforeseen/unforeseen_sample.csv")
-
+            """Male,22,1.78,89.8,no,no,2,1,Sometimes,no,2,no,0,0,Sometimes,Public_Transportation"""
+            
             match classify_unforeseen_sample_input_features_input:
                 case 1:
                     input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(raw_dataframe_loaded_from_file)
                 case 2:
-                    intermediate_values = {}
-                
-                    """ for label, values in raw_dataframe_loaded_from_file.head(2).items():
-                        intermediate_raw_dataframe_loaded_from_file[label] = input(f"Enter value for {label}: ") """
+                    raw_dataframe_loaded_from_intermediate_values = pandas.DataFrame(index=[0])
 
-                    for label, values in raw_dataframe_loaded_from_file.head(2).items():
-                        intermediate_values[label] = input(f"Enter value for {label}: ") 
-
-                    """
-                    Male
-                    22
-                    1.78
-                    89.8
-                    no
-                    no
-                    2
-                    1
-                    Sometimes
-                    no
-                    2
-                    no
-                    0
-                    0
-                    Sometimes
-                    Public_Transportation
-                    """
-                    raw_dataframe_loaded_from_intermediate_values = pandas.DataFrame(intermediate_values, index=[0])
+                    for label, values in raw_dataframe_loaded_from_file.head(0).items():
+                        raw_dataframe_loaded_from_intermediate_values[label] = input(f"Enter value for {label}: ") 
+                    
                     input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(raw_dataframe_loaded_from_intermediate_values)
                 case _:
                     print("Invalid option.")
