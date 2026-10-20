@@ -137,4 +137,5 @@ def main():
                 print("\nInvalid choice. The integer must correspond to one of the stated choices.\n")
 
 
-main()
+if __name__ == "__main__":
+    main()
