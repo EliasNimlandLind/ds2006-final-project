@@ -163,21 +163,44 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_
                 classify_unforeseen_sample_input_features_input = int(input(classify_unforeseen_sample_input_features_menu_text))
             except:
                 print("\nThe number representing an option must be an integer.\n")
+            
+            raw_dataframe_loaded_from_file = pandas.read_csv("datasets/unforeseen/unforeseen_sample.csv")
 
             match classify_unforeseen_sample_input_features_input:
                 case 1:
-                    raw_dataframe = pandas.read_csv("datasets/unforeseen/unforeseen_sample.csv")
-                    input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(raw_dataframe)
-                
+                    input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(raw_dataframe_loaded_from_file)
                 case 2:
-                    has_menu_been_exited = False
-                    while has_menu_been_exited == False:
-                        pass
+                    intermediate_values = {}
+                
+                    """ for label, values in raw_dataframe_loaded_from_file.head(2).items():
+                        intermediate_raw_dataframe_loaded_from_file[label] = input(f"Enter value for {label}: ") """
 
-                    raw_dataframe
+                    for label, values in raw_dataframe_loaded_from_file.head(2).items():
+                        intermediate_values[label] = input(f"Enter value for {label}: ") 
+
+                    """
+                    Male
+                    22
+                    1.78
+                    89.8
+                    no
+                    no
+                    2
+                    1
+                    Sometimes
+                    no
+                    2
+                    no
+                    0
+                    0
+                    Sometimes
+                    Public_Transportation
+                    """
+                    raw_dataframe_loaded_from_intermediate_values = pandas.DataFrame(intermediate_values, index=[0])
+                    input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(raw_dataframe_loaded_from_intermediate_values)
                 case _:
                     print("Invalid option.")
-                
+
             prediction = k_neighbours_classifier.predict(input_features)
             print(f"\nThe unforeseen sample was predicted to be: {prediction}\n")
             has_menu_been_exited = True
