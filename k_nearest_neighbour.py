@@ -171,12 +171,12 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_
                 case 1:
                     input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(raw_dataframe_loaded_from_file)
                 case 2:
-                    raw_dataframe_loaded_from_intermediate_values = pandas.DataFrame(index=[0])
+                    raw_dataframe_loaded_from_input = pandas.DataFrame(index=[0])
 
                     for label, values in raw_dataframe_loaded_from_file.head(0).items():
-                        raw_dataframe_loaded_from_intermediate_values[label] = input(f"Enter value for {label}: ") 
+                        raw_dataframe_loaded_from_input[label] = input(f"Enter value for {label}: ") 
                     
-                    input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(raw_dataframe_loaded_from_intermediate_values)
+                    input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(raw_dataframe_loaded_from_input)
                 case _:
                     print("Invalid option.")
 
