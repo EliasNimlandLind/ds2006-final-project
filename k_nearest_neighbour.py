@@ -1,3 +1,4 @@
+from enum import IntEnum
 import os
 
 import numpy
@@ -170,7 +171,7 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_
             
             raw_dataframe_loaded_from_file = pandas.read_csv("datasets/unforeseen/unforeseen_sample.csv")
             """Male,22,1.78,89.8,no,no,2,1,Sometimes,no,2,no,0,0,Sometimes,Public_Transportation"""
-            
+
             match classify_unforeseen_sample_input:
                 case 1:
                     input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(raw_dataframe_loaded_from_file)
@@ -178,14 +179,21 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_
                     
                 case 2:
                     raw_dataframe_loaded_from_input = pandas.DataFrame(index=[0])
-
+                    unique_values = raw_dataframe_loaded_from_file.columns.unique()
+        
                     for current_key in raw_dataframe_loaded_from_file.head(0).keys():
-                        key_value_input = input(f"Enter value for {current_key}: ")
-                        raw_dataframe_loaded_from_input[current_key] = key_value_input
+                        
+                        for current_value in unique_values:
+                            key_value_input = input(f"Enter value for {current_key}: ")
+
+                            if key_value_input == current_value:
+                                raw_dataframe_loaded_from_input[current_key] = key_value_input
+                            else:
+                                print(f"\n{key_value_input} was not found in the loaded the dataset.\n")
                     
                     input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(raw_dataframe_loaded_from_input)
                     has_menu_been_exited = True
-
+                
                 case _:
                     print("\nThe input must be 1 or 2.\n")
                     continue

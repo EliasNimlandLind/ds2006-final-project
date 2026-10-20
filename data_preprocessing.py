@@ -63,9 +63,6 @@ class DataProcessor:
         )
 
     def get_transformed_normalized_and_encoded_dataframe(self, raw_dataframe):
-        if not self.transformer:
-            raise ValueError("Fit the data processor first.")
-
         features = raw_dataframe[self.features]
         encoded_features = self.transformer.transform(features)
 
