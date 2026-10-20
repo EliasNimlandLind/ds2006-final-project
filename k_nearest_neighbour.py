@@ -155,34 +155,44 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_
             else:
                 print("\nEnter a valid integer.\n")
 
+    except Exception as exception:
+        print(f"\n{exception}\n")
+    
+    try:
         has_menu_been_exited = False
         while has_menu_been_exited == False:
             classify_unforeseen_sample_input_features_menu_text = "1. Load input features from a file\n2. Manually input all input features.\nSelect an option by typing the corresponding number: "
 
             try:
-                classify_unforeseen_sample_input_features_input = int(input(classify_unforeseen_sample_input_features_menu_text))
+                classify_unforeseen_sample_input = int(input(classify_unforeseen_sample_input_features_menu_text))
             except:
                 print("\nThe number representing an option must be an integer.\n")
             
             raw_dataframe_loaded_from_file = pandas.read_csv("datasets/unforeseen/unforeseen_sample.csv")
             """Male,22,1.78,89.8,no,no,2,1,Sometimes,no,2,no,0,0,Sometimes,Public_Transportation"""
             
-            match classify_unforeseen_sample_input_features_input:
+            match classify_unforeseen_sample_input:
                 case 1:
                     input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(raw_dataframe_loaded_from_file)
+                    has_menu_been_exited = True
+                    
                 case 2:
                     raw_dataframe_loaded_from_input = pandas.DataFrame(index=[0])
 
-                    for label, values in raw_dataframe_loaded_from_file.head(0).items():
-                        raw_dataframe_loaded_from_input[label] = input(f"Enter value for {label}: ") 
+                    for current_key in raw_dataframe_loaded_from_file.head(0).keys():
+                        key_value_input = input(f"Enter value for {current_key}: ")
+                        raw_dataframe_loaded_from_input[current_key] = key_value_input
                     
                     input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(raw_dataframe_loaded_from_input)
-                case _:
-                    print("Invalid option.")
+                    has_menu_been_exited = True
 
+                case _:
+                    print("\nThe input must be 1 or 2.\n")
+                    continue
+
+            classify_unforeseen_sample_input
             prediction = k_neighbours_classifier.predict(input_features)
             print(f"\nThe unforeseen sample was predicted to be: {prediction}\n")
-            has_menu_been_exited = True
 
     except Exception as exception:
         print(f"\n{exception}\n")
