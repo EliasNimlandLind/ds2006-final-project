@@ -1,14 +1,14 @@
 import os
 
 import pandas
+from sklearn.preprocessing import MinMaxScaler
 
-from data_preprocessing import encode_categorical_dataframe, normalize_numerical_dataframe, get_normalized_and_encoded_dataframe
-from utility import get_last_column_as_a_separate_dataframe, get_last_column_of_dataframe, get_items_as_string_with_indices, list_content_of_directory    
+from utility import get_last_column_as_a_separate_dataframe, get_items_as_string_with_indices, list_content_of_directory    
 
 dataframe = None
+normalized_and_encoded_dataframe = None
 
-def handle_data_frame_menu():
-    datasets_directory_name = "datasets"
+def handle_data_frame_menu(data_processor, datasets_directory_name = "datasets/training/"):
     datasets_found_in_directory = list_content_of_directory(datasets_directory_name)
     
     datasets_with_indices = get_items_as_string_with_indices(datasets_found_in_directory)
@@ -48,9 +48,14 @@ def handle_data_frame_menu():
         else:
             print("Enter a valid integer.\n")
 
-    dataframe = pandas.read_csv(path_to_dataset_to_load)
-    normalized_and_encoded_dataframe = get_normalized_and_encoded_dataframe(dataframe)
+    raw_dataframe = pandas.read_csv(path_to_dataset_to_load)
+    data_processor.raw_dataframe = raw_dataframe
     
+    normalized_and_encoded_dataframe = data_processor.get_fitted_normalized_and_encoded_dataframe()    
+
+    return raw_dataframe, normalized_and_encoded_dataframe
+
+def print_dataframe_statistics(dataframe, normalized_and_encoded_dataframe):
     dataframe_column_names_text = ""
     for current_feature_name in dataframe.columns[:-1]: # Using [:-1] is done to limit the iteration to item before the last one to avoid concatenate the name of the target classes.
         dataframe_column_names_text += f"\n{str(current_feature_name)}"
@@ -61,14 +66,13 @@ def handle_data_frame_menu():
 
     # Using a collection leads to high readability due to all data being viewable at once due to vertical alignment.
     dataframe_complete_information_text = (f"\n\nThe values of the 10 first rows before encoding and normalization are:\n"
-                                           f"{dataframe.head(10)}\n\n"
-                                           f"The values of the 10 first rows after encoding and normalization are:\n"
-                                           f"{normalized_and_encoded_dataframe.head(10)}\n\n"
-                                           f"The number of rows: {dataframe.shape[0]}\nThe number of columns: {dataframe.shape[1]}\n\n"
-                                           f"The names of the features: {dataframe_column_names_text}\n\n"
-                                           f"The names of the target classes are: {dataframe_target_classes_text}\n\n"
-                                           f"{dataframe.describe()}\n\n{get_last_column_as_a_separate_dataframe(dataframe).value_counts()}\n"
-                                           f"\nThe dataset was loaded correctly.\n")
+                                            f"{dataframe.head(10)}\n\n"
+                                            f"The values of the 10 first rows after encoding and normalization are:\n"
+                                            f"{normalized_and_encoded_dataframe.head(10)}\n\n"
+                                            f"The number of rows: {dataframe.shape[0]}\nThe number of columns: {dataframe.shape[1]}\n\n"
+                                            f"The names of the features: {dataframe_column_names_text}\n\n"
+                                            f"The names of the target classes are: {dataframe_target_classes_text}\n\n"
+                                            f"{dataframe.describe()}\n\n{get_last_column_as_a_separate_dataframe(dataframe).value_counts()}\n"
+                                            f"\nThe dataset was loaded correctly.\n")
     
-    print(dataframe_complete_information_text)
-    return dataframe, normalized_and_encoded_dataframe
+    print(dataframe_complete_information_text)    

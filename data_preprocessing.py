@@ -1,54 +1,85 @@
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
-
 import pandas
-import numpy
 
-def normalize_numerical_dataframe(dataframe_to_normalize):
-    """
-    This ensures the distances calculated by the model are contributing equally, regardless of units.
-    """
-    # Creating an object of MinMaxScaler.
-    min_max_scaler = MinMaxScaler()
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import MinMaxScaler, OneHotEncoder, OrdinalEncoder
 
-    normalized_dataframe = pandas.DataFrame()
-    for current_feature_to_normalize in dataframe_to_normalize:
-        normalized_dataframe[[current_feature_to_normalize]] = min_max_scaler.fit_transform(dataframe_to_normalize[[current_feature_to_normalize]])
-    
-    return normalized_dataframe
-
-def encode_categorical_dataframe(dataframe_to_encode):
-    ordinal_categories = [["no", "Sometimes", "Frequently", "Always"],["no", "Sometimes", "Frequently", "Always"]]
-    ordinal_features = ['CAEC', 'CALC']
-
-    nominal_features = ['Gender', 'family_history_with_overweight','SMOKE', 'FAVC', 'SCC', 'MTRANS']
-
-    categorical_transformer = ColumnTransformer(transformers=[('ordinal', OrdinalEncoder(categories=ordinal_categories), ordinal_features),
-                                                              ('nominal', OneHotEncoder(sparse_output=False),nominal_features)]) # sparse_output = False ensures the result will be in the correct format.
-    categorical_transformer.set_output(transform="pandas")
-
-    encoded_dataframe = categorical_transformer.fit_transform(dataframe_to_encode)
-
-    return encoded_dataframe   
+from utility import get_last_column_of_dataframe
 
 
-def get_normalized_and_encoded_dataframe(dataframe):
-    """
-    Separate data based on type to perform type specific operations, e.g. normalisation and ordinal encoding.
+class DataProcessor:
+    def __init__(self):
+        self.raw_dataframe = pandas.DataFrame()
+        self.features = []
+        
+        # "passthrough" is included to avoid encoding numerical values.
+        self.transformer = ColumnTransformer(
+            transformers=[
+                (
+                    "ordinal",
+                    OrdinalEncoder(categories=self.get_ordinal_values()[0]),
+                    self.get_ordinal_values()[1],
+                ),
+                (
+                    "nominal",
+                    OneHotEncoder(
+                        sparse_output=False,
+                    ),
+                    self.get_nominal_vales(),
+                ),
+            ],
+            remainder="passthrough", 
+            ).set_output(transform="pandas")
+        self.min_max_scaler = MinMaxScaler()
 
-    Returns: A dataframe containing the normalized data in addition to the encoded data.
-    """
-    # This gets all features which are numbers from the dataframe.
-    raw_numerical_sub_dataframe = dataframe.select_dtypes(include=[numpy.number])
-    normalized_sub_dataframe = normalize_numerical_dataframe(raw_numerical_sub_dataframe)
+    def get_ordinal_values(self):
+        categories = [
+            ["no", "Sometimes", "Frequently", "Always"],
+            ["no", "Sometimes", "Frequently", "Always"],
+        ]
+        features = ["CAEC", "CALC"]
 
-    # This gets all features which are not numbers from the dataframe.
-    raw_categorical_sub_dataframe = dataframe.select_dtypes(exclude=[numpy.number])
-    encoded_categorical_sub_dataframe = encode_categorical_dataframe(raw_categorical_sub_dataframe)
-    # This done to ensure all values are contained in the same range, i.e. 0 - 1. 
-    # Thus, avoiding the ordinal features being contained in another range, e.g. 1 - 3, while all other feature being contained as described above.
-    encoded_categorical_sub_dataframe = normalize_numerical_dataframe(encoded_categorical_sub_dataframe)
-    
-    normalized_and_encoded_dataframe = pandas.concat([normalized_sub_dataframe, encoded_categorical_sub_dataframe], axis=1)
-    return normalized_and_encoded_dataframe
+        ordinal_values = [categories, features] 
+        return ordinal_values
+
+    def get_nominal_vales(self):
+        return [
+            "Gender",
+            "family_history_with_overweight",
+            "SMOKE",
+            "FAVC",
+            "SCC",
+            "MTRANS",
+        ]
+
+    def fit_transform(self, raw_features):
+        self.features = raw_features.columns.tolist()
+
+        encoded_categorical_features_with_raw_numerical = self.transformer.fit_transform(raw_features)
+
+        return pandas.DataFrame(
+            self.min_max_scaler.fit_transform(encoded_categorical_features_with_raw_numerical),
+            columns=encoded_categorical_features_with_raw_numerical.columns,
+            index=raw_features.index,
+        )
+
+    def get_transformed_normalized_and_encoded_dataframe(self, raw_dataframe):
+        if not self.transformer:
+            raise ValueError("Fit the data processor first.")
+
+        features = raw_dataframe[self.features]
+        encoded_features = self.transformer.transform(features)
+
+        return pandas.DataFrame(
+            self.min_max_scaler.transform(encoded_features)
+        )
+
+    def get_fitted_normalized_and_encoded_dataframe(self):
+        target_name = get_last_column_of_dataframe(self.raw_dataframe)
+
+        features = self.raw_dataframe.drop(columns=[target_name])
+        target = self.raw_dataframe[[target_name]]
+
+        return pandas.concat(
+            [self.fit_transform(features), target],
+            axis=1,
+        )

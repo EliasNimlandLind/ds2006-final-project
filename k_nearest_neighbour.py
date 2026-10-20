@@ -1,9 +1,15 @@
+import os
+
+import numpy
+import pandas
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, classification_report
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
 import matplotlib.pyplot as mathplotlib
 
+from data_frame import handle_data_frame_menu
 from data_partitioning_configuration import data_partitioning_strategy_names
+from data_preprocessing import DataProcessor
 from utility import get_last_column_as_a_separate_dataframe, get_last_column_of_dataframe
 
 class K_nearest_neighbour_conductor():
@@ -65,8 +71,6 @@ class K_nearest_neighbour_conductor():
         features = self.normalized_and_encoded_dataframe.drop(get_last_column_of_dataframe(self.normalized_and_encoded_dataframe), axis=1)
         # Creates a dataframe from solely the data in the last column.
         classes = get_last_column_as_a_separate_dataframe(self.dataframe)
-
-        #features = self.normalized_and_encoded_dataframe
         
         if (self.data_partitioning_strategy['is_stratified'] == True):
             which_part_base_stratification_on = classes
@@ -121,3 +125,62 @@ def handle_nearest_neighbour_conductor_menu(dataframe, normalized_and_encoded_da
             print("\nThe number of experiments to conduct must be greater than 0.\n")
             
     return k_nearest_neighbour_conductors
+
+
+def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_processor):
+    if not k_nearest_neighbour_conductors:
+        return print("\nResults from experiments are required to classify unforeseen samples.\n")
+
+    k_neighbours_classifier = ""
+    input_features  = []
+
+    try:
+        has_menu_been_exited = False
+        while has_menu_been_exited == False:
+            classify_unforeseen_sample_classifier_menu_text = "\n"
+
+            for current_index, current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors.items():
+                classify_unforeseen_sample_classifier_menu_text += f"{current_index}. {current_k_nearest_neighbour_conductor.get_k_value_text()}\n"
+            classify_unforeseen_sample_classifier_menu_text += "Select a model to use to classify the sample by typing the corresponding number: "
+            
+            classify_unforeseen_sample_k_neighbours_classifier_input = 0
+            try:
+                classify_unforeseen_sample_k_neighbours_classifier_input = int(input(classify_unforeseen_sample_classifier_menu_text))
+            except:
+                print("\nThe number representing a model must be an integer.\n")
+
+            if (0 < classify_unforeseen_sample_k_neighbours_classifier_input <= len(k_nearest_neighbour_conductors)):
+                k_neighbours_classifier = k_nearest_neighbour_conductors[classify_unforeseen_sample_k_neighbours_classifier_input].k_neighbours_classifier
+                has_menu_been_exited = True
+            else:
+                print("\nEnter a valid integer.\n")
+
+        has_menu_been_exited = False
+        while has_menu_been_exited == False:
+            classify_unforeseen_sample_input_features_menu_text = "1. Load input features from a file\n2. Manually input all input features.\nSelect an option by typing the corresponding number: "
+
+            try:
+                classify_unforeseen_sample_input_features_input = int(input(classify_unforeseen_sample_input_features_menu_text))
+            except:
+                print("\nThe number representing an option must be an integer.\n")
+
+            match classify_unforeseen_sample_input_features_input:
+                case 1:
+                    raw_dataframe = pandas.read_csv("datasets/unforeseen/unforeseen_sample.csv")
+                    input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(raw_dataframe)
+                
+                case 2:
+                    has_menu_been_exited = False
+                    while has_menu_been_exited == False:
+                        pass
+
+                    raw_dataframe
+                case _:
+                    print("Invalid option.")
+                
+            prediction = k_neighbours_classifier.predict(input_features)
+            print(f"\nThe unforeseen sample was predicted to be: {prediction}\n")
+            has_menu_been_exited = True
+
+    except Exception as exception:
+        print(f"\n{exception}\n")

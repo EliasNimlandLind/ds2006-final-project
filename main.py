@@ -1,11 +1,14 @@
-from k_nearest_neighbour import handle_nearest_neighbour_conductor_menu
-from data_frame import handle_data_frame_menu
+from data_preprocessing import DataProcessor
+from k_nearest_neighbour import handle_nearest_neighbour_conductor_menu, handle_classify_unforeseen_sample_menu
+from data_frame import handle_data_frame_menu, print_dataframe_statistics
 from data_partitioning_configuration import handle_data_partitioning_menu
 from utility import get_items_as_string_with_indices
 
 def main():
     has_menu_been_exited = False
     k_nearest_neighbour_conductors_without_indices = []
+    
+    data_processor = DataProcessor()
 
     while has_menu_been_exited == False:
         try:
@@ -22,7 +25,9 @@ def main():
         
         match main_menu_input:
             case 1:
-                dataframe, normalized_and_encoded_dataframe = handle_data_frame_menu()
+                dataframe, normalized_and_encoded_dataframe = handle_data_frame_menu(data_processor)
+                print_dataframe_statistics(dataframe, normalized_and_encoded_dataframe)
+                
                 data_partitioning_configuration = handle_data_partitioning_menu(dataframe.shape[0])
                 k_nearest_neighbour_conductors_without_indices = handle_nearest_neighbour_conductor_menu(dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration)
 
@@ -122,9 +127,8 @@ def main():
                     print(str(current_k_nearest_neighbour_conductor))            
 
             case 6:
-                for current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_without_indices:
-                    print(current_k_nearest_neighbour_conductor.get_k_value_text)    
-            
+                handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors_with_indices, data_processor)
+
             case 0:
                 print("\nExiting...\n")
                 has_menu_been_exited = True
