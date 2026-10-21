@@ -164,12 +164,16 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_
 
             for current_index, current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors.items():
                 classify_unforeseen_sample_classifier_menu_text += f"{current_index}. {current_k_nearest_neighbour_conductor.get_k_value_text()}\n"
+            
             classify_unforeseen_sample_classifier_menu_text += "Select a model to use to classify the sample by typing the corresponding number: "
 
             number_of_classifiers = len(k_nearest_neighbour_conductors)
-            selected_classifier_input = 0
-            selected_classifier_input = validate_user_input_integer(text_to_display=classify_unforeseen_sample_classifier_menu_text, value_error_message="....", maximum_input_value=number_of_classifiers)
-            
+    
+            selected_classifier_input = validate_user_input_integer(text_to_display=classify_unforeseen_sample_classifier_menu_text, maximum_input_value=number_of_classifiers)
+
+            if (selected_classifier_input is None):
+                raise ValueError("Invalid input: The input was likely not an integer.")
+        
             if (0 < selected_classifier_input <= number_of_classifiers):
                 k_neighbours_classifier = k_nearest_neighbour_conductors[selected_classifier_input].k_neighbours_classifier
                 has_menu_been_exited = True

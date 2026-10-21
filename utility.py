@@ -26,7 +26,7 @@ def validate_user_input_integer(text_to_display, value_error_message = "Enter an
     user_input_as_string = input(text_to_display)
     try:
         user_input_as_integer = int(user_input_as_string)
-
+        
         if maximum_input_value > minimum_input_value:
             if minimum_input_value <= user_input_as_integer <= maximum_input_value:
                 return user_input_as_integer
