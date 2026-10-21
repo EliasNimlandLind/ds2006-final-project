@@ -1,17 +1,14 @@
 from enum import IntEnum
-import os
 
-import numpy
 import pandas
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, classification_report
+from sklearn.metrics import ConfusionMatrixDisplay, accuracy_score, classification_report
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
 import matplotlib.pyplot as mathplotlib
 
-from data_frame import handle_data_frame_menu
 from data_partitioning_configuration import data_partitioning_strategy_names
+
 from data_preprocessing import DataProcessor
-from utility import get_last_column_as_a_separate_dataframe, get_last_column_of_dataframe
 
 class K_nearest_neighbour_conductor():
     def __init__(self, k_value, dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration):
@@ -24,33 +21,40 @@ class K_nearest_neighbour_conductor():
         return f"k = {self.k_value}"
 
     def __str__(self):
-        model_statistics = ""
-        
-        if (self.data_partitioning_strategy['data_partitioning_strategy_name'] == data_partitioning_strategy_names.TRAIN_TEST_SPLIT.value):
-                # Obtains the predictions from the kNN classifier:
-                model_statistics = (f"\n{self.get_k_value_text()}\n"
-                                        f"Accuracy: {accuracy_score(self.classes_test, self.predictions)}\n\n"
-                                        f"  {classification_report(self.classes_test, self.predictions)}\n\n"
-                                        )
-        else:
-            score_types = ["accuracy", 
-                            "average_precision", 
-                            "recall_micro", 
-                            "f1_micro"]
+        try:
+            model_statistics = ""
             
-            model_statistics = f"\n{self.get_k_value_text()}"
-            for current_score_type in score_types:
-                scores = ""
-                cv = None
-                if self.data_partitioning_strategy["is_stratified"] == False:
-                    cv = self.data_partitioning_strategy['number_of_folds']
-                else:
-                    cv = StratifiedKFold(n_splits=self.data_partitioning_strategy['number_of_folds'])
+            if (self.data_partitioning_strategy['data_partitioning_strategy_name'] == data_partitioning_strategy_names.TRAIN_TEST_SPLIT):
+                    # Obtains the predictions from the kNN classifier:
+                    model_statistics = (f"\n{self.get_k_value_text()}\n"
+                                            f"Accuracy: {accuracy_score(self.classes_test, self.predictions)}\n\n"
+                                            f"  {classification_report(self.classes_test, self.predictions)}\n\n"
+                                            )
+            else:
+                number_of_folds = self.data_partitioning_strategy['number_of_folds']
+                if number_of_folds <= 0:
+                    raise ValueError("The number of folds must be greater than 0.")
+                
+                score_types = ["accuracy", 
+                                "average_precision", 
+                                "recall_micro", 
+                                "f1_micro"]
+                
+                model_statistics = f"\n{self.get_k_value_text()}"
+                for current_score_type in score_types:
+                    scores = ""
+                    cv = None
+                    if self.data_partitioning_strategy["is_stratified"] == False:
+                        cv = number_of_folds
+                    else:
+                        cv = StratifiedKFold(n_splits=number_of_folds)
 
-                scores = cross_val_score(self.k_neighbours_classifier, X=self.features, y=self.classes, cv=cv, scoring=current_score_type)
+                    scores = cross_val_score(self.k_neighbours_classifier, X=self.features, y=self.classes, cv=cv, scoring=current_score_type)
+            
+                    model_statistics += f"\n{current_score_type}:\n    {scores}\n    Mean: {scores.mean()}\n\n"
+        except Exception as exception:
+            print(f"\n{exception}\n")
         
-                model_statistics += f"\n{current_score_type}:\n    {scores}\n    Mean: {scores.mean()}\n\n"
-    
         return model_statistics
 
     def display_confusion_matrix(self):
@@ -66,24 +70,24 @@ class K_nearest_neighbour_conductor():
             mathplotlib.show()
 
         except Exception as exception:
-            print(exception)
+            print(f"\n{exception}\n")
         
-    def execute_experiment(self):        
-        features = self.normalized_and_encoded_dataframe.drop(get_last_column_of_dataframe(self.normalized_and_encoded_dataframe), axis=1)
+    def execute_experiment(self, data_processor: DataProcessor):        
+        all_features = self.normalized_and_encoded_dataframe.drop(data_processor.get_last_column_of_dataframe(self.normalized_and_encoded_dataframe), axis=1)
         # Creates a dataframe from solely the data in the last column.
-        classes = get_last_column_as_a_separate_dataframe(self.dataframe)
+        all_classes = data_processor.get_last_column_as_a_separate_dataframe(self.dataframe)
         
         if (self.data_partitioning_strategy['is_stratified'] == True):
-            which_part_base_stratification_on = classes
+            which_part_base_stratification_on = all_classes
 
         # Split the data into train/test sets 
         features_train, features_test, classes_train, classes_test = train_test_split(
-        features, classes, test_size=self.data_partitioning_strategy['testing_percentage'], random_state=10, stratify=which_part_base_stratification_on
+        all_features, all_classes, test_size=self.data_partitioning_strategy['testing_percentage'], random_state=10, stratify=which_part_base_stratification_on
         )   
 
         self.features_test = features_test
 
-        self.classes = classes
+        self.classes = all_classes
         self.classes_test = classes_test
         
         # Creates a Knn Classifier Object.
@@ -98,7 +102,7 @@ def handle_nearest_neighbour_conductor_menu(dataframe, normalized_and_encoded_da
     has_menu_been_exited = False
     while has_menu_been_exited == False:
         input_number_of_experiments_using_k_nearest_neighbours = 0
-
+        
         try:
             input_number_of_experiments_using_k_nearest_neighbours = int(input("Enter the number of experiments to conduct using k nearest neighbour: "))
         except:
@@ -127,6 +131,33 @@ def handle_nearest_neighbour_conductor_menu(dataframe, normalized_and_encoded_da
             
     return k_nearest_neighbour_conductors
 
+def handle_confusion_matrix_menu(k_nearest_neighbour_conductors_with_indices):
+    try:
+        if not k_nearest_neighbour_conductors_with_indices:
+            raise ValueError("Experiments must be conducted before display the corresponding confusion matrices.")
+
+        has_menu_been_exited = False
+        while has_menu_been_exited == False:
+            k_nearest_neighbour_conductors_with_indices_as_text = ""
+            for current_index, current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_with_indices.items():
+                k_nearest_neighbour_conductors_with_indices_as_text += f"{current_index}. {current_k_nearest_neighbour_conductor.get_k_value_text()}\n"
+            
+            print(k_nearest_neighbour_conductors_with_indices_as_text)    
+            
+            confusion_matrix_index_input = 0
+            try:
+                confusion_matrix_index_input = int(input("Enter the number corresponding to the experiment for which you want to display the associated confusion matrix: "))
+            except:
+                print("\nThe number representing an experiment must be an integer.\n")
+                
+            if 0 < confusion_matrix_index_input <= len(k_nearest_neighbour_conductors_with_indices.items()):
+                k_nearest_neighbour_conductors_with_indices[confusion_matrix_index_input].display_confusion_matrix()
+                has_menu_been_exited = True
+            else:
+                print(f"\nThe number must be between 0 and the number of experiments, i.e.{len(k_nearest_neighbour_conductors_with_indices.items())}\n")
+    
+    except Exception as exception:
+        print(f"\n{exception}\n")
 
 def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_processor):
     if not k_nearest_neighbour_conductors:

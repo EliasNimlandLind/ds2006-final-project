@@ -3,8 +3,6 @@ import pandas
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import MinMaxScaler, OneHotEncoder, OrdinalEncoder
 
-from utility import get_last_column_of_dataframe
-
 
 class DataProcessor:
     def __init__(self):
@@ -71,7 +69,7 @@ class DataProcessor:
         )
 
     def get_fitted_normalized_and_encoded_dataframe(self):
-        target_name = get_last_column_of_dataframe(self.raw_dataframe)
+        target_name = self.get_last_column_of_dataframe(self.raw_dataframe)
 
         features = self.raw_dataframe.drop(columns=[target_name])
         target = self.raw_dataframe[[target_name]]
@@ -80,3 +78,12 @@ class DataProcessor:
             [self.fit_transform(features), target],
             axis=1,
         )
+
+    def get_last_column_as_a_separate_dataframe(self, dataframe):
+        return dataframe[self.get_last_column_of_dataframe(dataframe)]
+
+    def get_last_column_of_dataframe(self, dataframe):
+        """
+        This can be used to get the classes, if these are contained in the last column.
+        """
+        return dataframe.columns[-1]

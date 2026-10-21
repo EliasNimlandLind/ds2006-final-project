@@ -1,8 +1,11 @@
+from k_nearest_neighbour import handle_confusion_matrix_menu, handle_nearest_neighbour_conductor_menu, handle_classify_unforeseen_sample_menu
+
 from data_preprocessing import DataProcessor
-from k_nearest_neighbour import handle_nearest_neighbour_conductor_menu, handle_classify_unforeseen_sample_menu
 from data_frame import handle_data_frame_menu, print_dataframe_statistics
 from data_partitioning_configuration import handle_data_partitioning_menu
+
 from utility import get_items_as_string_with_indices
+
 
 def main():
     has_menu_been_exited = False
@@ -26,7 +29,7 @@ def main():
         match main_menu_input:
             case 1:
                 dataframe, normalized_and_encoded_dataframe = handle_data_frame_menu(data_processor)
-                print_dataframe_statistics(dataframe, normalized_and_encoded_dataframe)
+                print_dataframe_statistics(data_processor, dataframe, normalized_and_encoded_dataframe)
                 
                 data_partitioning_configuration = handle_data_partitioning_menu(dataframe.shape[0])
                 k_nearest_neighbour_conductors_without_indices = handle_nearest_neighbour_conductor_menu(dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration)
@@ -49,35 +52,12 @@ def main():
                     continue
 
                 for current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_without_indices:
-                    current_k_nearest_neighbour_conductor.execute_experiment()
+                    current_k_nearest_neighbour_conductor.execute_experiment(data_processor)
 
                 print("\nThe experiments were successfully conducted.\n")
             
             case 3:
-                confusion_matrix_experiments_status_error = "\nExperiments must be conducted before display the corresponding confusion matrices.\n"
-                try:
-                    has_menu_been_exited = False
-                    while has_menu_been_exited == False:
-                        k_nearest_neighbour_conductors_with_indices_as_text = ""
-                        for current_index, current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_with_indices.items():
-                            k_nearest_neighbour_conductors_with_indices_as_text += f"{current_index}. {current_k_nearest_neighbour_conductor.get_k_value_text()}\n"
-                        
-                        print(k_nearest_neighbour_conductors_with_indices_as_text)    
-                        
-                        confusion_matrix_index_input = 0
-                        try:
-                            confusion_matrix_index_input = int(input("Enter the number corresponding to the experiment for which you want to display the associated confusion matrix: "))
-                        except:
-                            print("\nThe number representing an experiment must be an integer.\n")
-                            
-                        if 0 < confusion_matrix_index_input <= len(k_nearest_neighbour_conductors_with_indices.items()):
-                            k_nearest_neighbour_conductors_with_indices[confusion_matrix_index_input].display_confusion_matrix()
-                            has_menu_been_exited = True
-                        else:
-                            print(f"\nThe number must be between 0 and the number of experiments, i.e.{len(k_nearest_neighbour_conductors_with_indices.items())}\n")
-                
-                except:
-                    print(confusion_matrix_experiments_status_error)
+                handle_confusion_matrix_menu(k_nearest_neighbour_conductors_with_indices)
 
             case 4:
                 try:  

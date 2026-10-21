@@ -16,12 +16,3 @@ def list_content_of_directory(directory_name):
         os.mkdir(directory_name)
         
     return os.listdir(directory_name)
-
-def get_last_column_as_a_separate_dataframe(dataframe):
-    return dataframe[get_last_column_of_dataframe(dataframe)]
-		
-def get_last_column_of_dataframe(dataframe):
-    """
-    This can be used to get the classes, if these are contained in the last column.
-    """
-    return dataframe.columns[-1]
