@@ -4,7 +4,7 @@ import pandas
 
 from data_preprocessing import DataProcessor
 
-from utility import get_items_as_string_with_indices, list_content_of_directory    
+from utility import get_items_as_string_with_indices, list_content_of_directory, validate_user_input_integer    
 
 dataframe = None
 normalized_and_encoded_dataframe = None
@@ -24,13 +24,11 @@ def handle_data_frame_menu(data_processor: DataProcessor, datasets_directory_nam
 
     has_menu_been_exited = False
     while has_menu_been_exited == False:
+        number_of_menu_options = len(datasets_with_indices)
         input_dataset_selection = 0
-        try:
-            input_dataset_selection = int(input(dataset_selection_menu_text))
-        except: 
-            print("Enter an integer.\n")
+        input_dataset_selection = validate_user_input_integer(dataset_selection_menu_text, "Enter an integer", number_of_menu_options)
 
-        if (0 < input_dataset_selection <= len(datasets_with_indices)):
+        if (0 < input_dataset_selection <= number_of_menu_options):
             path_to_dataset_to_load = f"{datasets_directory_name}/{datasets_with_indices[input_dataset_selection]}"
             has_menu_been_exited = True
             

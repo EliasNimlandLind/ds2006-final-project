@@ -4,7 +4,7 @@ from data_preprocessing import DataProcessor
 from data_frame import handle_data_frame_menu, print_dataframe_statistics
 from data_partitioning_configuration import handle_data_partitioning_menu
 
-from utility import get_items_as_string_with_indices
+from utility import get_items_as_string_with_indices, validate_user_input_integer
 
 
 def main():
@@ -14,19 +14,17 @@ def main():
     data_processor = DataProcessor()
 
     while has_menu_been_exited == False:
-        try:
-            main_menu_input = int(input(("1. Load a dataset and create a configuration for the experiments.\n"
-                                         "2. Conduct experiments.\n"
-                                         "3. Show confusion matrix.\n"
-                                         "4. Save data to file.\n"
-                                         "5. Display model statistics.\n"
-                                         "6. Classify an unforeseen sample.\n"
-                                         "0. Exit the application.\n"
-                                         "Enter the choice of how to continue, as an integer: ")))
-        except:
-            print("\nThe choice must be specified as an integer.\n")
+        main_menu_option_selection_text = ("1. Load a dataset and create a configuration for the experiments.\n"
+                                     "2. Conduct experiments.\n"
+                                     "3. Show confusion matrix.\n"
+                                     "4. Save data to file.\n"
+                                     "5. Display model statistics.\n"
+                                     "6. Classify an unforeseen sample.\n"
+                                     "0. Exit the application.\n"
+                                     "Enter the choice of how to continue, as an integer: ")
+        main_menu_selected_option = validate_user_input_integer(main_menu_option_selection_text, "The choice must be specified as an integer.", 6, 0)
         
-        match main_menu_input:
+        match main_menu_selected_option:
             case 1:
                 dataframe, normalized_and_encoded_dataframe = handle_data_frame_menu(data_processor)
                 print_dataframe_statistics(data_processor, dataframe, normalized_and_encoded_dataframe)

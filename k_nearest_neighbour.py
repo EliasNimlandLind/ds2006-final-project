@@ -9,6 +9,7 @@ import matplotlib.pyplot as mathplotlib
 from data_partitioning_configuration import data_partitioning_strategy_names
 
 from data_preprocessing import DataProcessor
+from utility import validate_user_input_integer
 
 class K_nearest_neighbour_conductor():
     def __init__(self, k_value, dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration):
@@ -102,20 +103,13 @@ def handle_nearest_neighbour_conductor_menu(dataframe, normalized_and_encoded_da
     has_menu_been_exited = False
     while has_menu_been_exited == False:
         input_number_of_experiments_using_k_nearest_neighbours = 0
-        
-        try:
-            input_number_of_experiments_using_k_nearest_neighbours = int(input("Enter the number of experiments to conduct using k nearest neighbour: "))
-        except:
-            print("\nThe number of experiments to conduct must be an integer.\n")
+        input_number_of_experiments_using_k_nearest_neighbours = validate_user_input_integer("Enter the number of experiments to conduct using k nearest neighbour: ", "The number of experiments to conduct must be an integer", 100, 1)
 
         if (input_number_of_experiments_using_k_nearest_neighbours > 0):
             for current_k_nearest_neighbour_conductor_index in range(input_number_of_experiments_using_k_nearest_neighbours):
                 is_current_k_value_valid = False
                 while is_current_k_value_valid == False:
-                    try:
-                        current_k_value = int(input(f"Enter the k value for experiment number {current_k_nearest_neighbour_conductor_index + 1}: "))
-                    except:
-                        print("\nThe current k value must be an integer.\n")
+                    current_k_value = validate_user_input_integer(f"Enter the k value for experiment number {current_k_nearest_neighbour_conductor_index + 1}: ", "The current k value must be an integer")
 
                     if (current_k_value > 0):
                         current_k_nearest_neighbour_conductor = K_nearest_neighbour_conductor(current_k_value, dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration)
@@ -145,10 +139,8 @@ def handle_confusion_matrix_menu(k_nearest_neighbour_conductors_with_indices):
             print(k_nearest_neighbour_conductors_with_indices_as_text)    
             
             confusion_matrix_index_input = 0
-            try:
-                confusion_matrix_index_input = int(input("Enter the number corresponding to the experiment for which you want to display the associated confusion matrix: "))
-            except:
-                print("\nThe number representing an experiment must be an integer.\n")
+            
+            confusion_matrix_index_input = validate_user_input_integer("Enter the number corresponding to the experiment for which you want to display the associated confusion matrix: ", "The number representing an experiment must be an integer", len(k_nearest_neighbour_conductors_with_indices.items()))
                 
             if 0 < confusion_matrix_index_input <= len(k_nearest_neighbour_conductors_with_indices.items()):
                 k_nearest_neighbour_conductors_with_indices[confusion_matrix_index_input].display_confusion_matrix()
@@ -165,30 +157,27 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_
 
     k_neighbours_classifier = ""
     input_features  = []
-
-    try:
-        has_menu_been_exited = False
-        while has_menu_been_exited == False:
+    has_menu_been_exited = False
+    while has_menu_been_exited == False:
+        try:
             classify_unforeseen_sample_classifier_menu_text = "\n"
 
             for current_index, current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors.items():
                 classify_unforeseen_sample_classifier_menu_text += f"{current_index}. {current_k_nearest_neighbour_conductor.get_k_value_text()}\n"
             classify_unforeseen_sample_classifier_menu_text += "Select a model to use to classify the sample by typing the corresponding number: "
-            
-            classify_unforeseen_sample_k_neighbours_classifier_input = 0
-            try:
-                classify_unforeseen_sample_k_neighbours_classifier_input = int(input(classify_unforeseen_sample_classifier_menu_text))
-            except:
-                print("\nThe number representing a model must be an integer.\n")
 
-            if (0 < classify_unforeseen_sample_k_neighbours_classifier_input <= len(k_nearest_neighbour_conductors)):
-                k_neighbours_classifier = k_nearest_neighbour_conductors[classify_unforeseen_sample_k_neighbours_classifier_input].k_neighbours_classifier
+            number_of_classifiers = len(k_nearest_neighbour_conductors)
+            selected_classifier_input = 0
+            selected_classifier_input = validate_user_input_integer(text_to_display=classify_unforeseen_sample_classifier_menu_text, value_error_message="....", maximum_input_value=number_of_classifiers)
+            
+            if (0 < selected_classifier_input <= number_of_classifiers):
+                k_neighbours_classifier = k_nearest_neighbour_conductors[selected_classifier_input].k_neighbours_classifier
                 has_menu_been_exited = True
             else:
                 print("\nEnter a valid integer.\n")
 
-    except Exception as exception:
-        print(f"\n{exception}\n")
+        except Exception as exception:
+            print(f"\n{exception}\n")
     
     try:
         has_menu_been_exited = False
@@ -200,38 +189,51 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_
             except:
                 print("\nThe number representing an option must be an integer.\n")
             
-            raw_dataframe_loaded_from_file = pandas.read_csv("datasets/unforeseen/unforeseen_sample.csv")
+            raw_dataframe_loaded_from_file = pandas.DataFrame()
             """Male,22,1.78,89.8,no,no,2,1,Sometimes,no,2,no,0,0,Sometimes,Public_Transportation"""
 
             match classify_unforeseen_sample_input:
                 case 1:
+                    raw_dataframe_loaded_from_file = pandas.read_csv("datasets/training/ObesityDataSet_raw_and_data_sinthetic.csv.csv")
                     input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(raw_dataframe_loaded_from_file)
                     has_menu_been_exited = True
                     
                 case 2:
                     raw_dataframe_loaded_from_input = pandas.DataFrame(index=[0])
-                    unique_values = raw_dataframe_loaded_from_file.columns.unique()
-        
-                    for current_key in raw_dataframe_loaded_from_file.head(0).keys():
-                        
-                        for current_value in unique_values:
-                            key_value_input = input(f"Enter value for {current_key}: ")
-
-                            if key_value_input == current_value:
-                                raw_dataframe_loaded_from_input[current_key] = key_value_input
-                            else:
-                                print(f"\n{key_value_input} was not found in the loaded the dataset.\n")
+                    for current_key in raw_dataframe_loaded_from_file.columns:
                     
-                    input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(raw_dataframe_loaded_from_input)
-                    has_menu_been_exited = True
-                
+                        unique_values = (
+                            raw_dataframe_loaded_from_file[current_key]
+                            .astype(str)
+                            .unique()
+                        )
+
+                        has_the_current_value_been_assigned = False
+                        while has_the_current_value_been_assigned == False:
+                            key_value_input = input(
+                                f"Enter value for {current_key}: "
+                            ).strip()
+
+                            if key_value_input in unique_values:
+                                raw_dataframe_loaded_from_input[current_key] = key_value_input
+                                has_the_current_value_been_assigned = True
+                            else:
+                                print(
+                                    f"\n{key_value_input} was not found "
+                                    f"in column {current_key}.\n"
+                                )
+                    
+                    input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(
+                        raw_dataframe_loaded_from_input
+                    )
+        
                 case _:
                     print("\nThe input must be 1 or 2.\n")
                     continue
 
             classify_unforeseen_sample_input
             prediction = k_neighbours_classifier.predict(input_features)
-            print(f"\nThe unforeseen sample was predicted to be: {prediction}\n")
+            print(f"\nThe unforeseen sample was predicted to be: {prediction}.\n")
 
     except Exception as exception:
         print(f"\n{exception}\n")

@@ -1,6 +1,6 @@
 from enum import Enum
 
-from utility import get_items_as_string_with_indices
+from utility import get_items_as_string_with_indices, validate_user_input_integer
 
 
 class data_partitioning_strategy_names(Enum):
@@ -8,7 +8,7 @@ class data_partitioning_strategy_names(Enum):
     K_FOLD_CROSS_VALIDATION = "K-Fold Cross-Validation"
 
 def handle_data_partitioning_menu(number_of_rows):
-    data_partitioning_configuration = {
+    initial_data_partitioning_configuration = {
         'is_stratified': True,
         'data_partitioning_strategy_name': data_partitioning_strategy_names.TRAIN_TEST_SPLIT,
         'number_of_folds': 0,
@@ -28,44 +28,38 @@ def handle_data_partitioning_menu(number_of_rows):
 
     has_menu_been_exited = False
     while has_menu_been_exited == False:
+        number_of_menu_options = len(partitioning_strategy_names_with_indices)
+        
         input_data_partitioning_strategy_selection = 0
-
-        try:
-            input_data_partitioning_strategy_selection = int(input(data_partitioning_strategy_selection_menu_text))
-        except: 
-            print("\nEnter an integer.\n")
+        input_data_partitioning_strategy_selection = validate_user_input_integer(data_partitioning_strategy_selection_menu_text, number_of_menu_options)
 
         if input_data_partitioning_strategy_selection == default_data_partitioning_configuration_index:
-            return data_partitioning_configuration
+            return initial_data_partitioning_configuration
         
-        if (0 < input_data_partitioning_strategy_selection <= len(partitioning_strategy_names_with_indices)):
-            data_partitioning_configuration['data_partitioning_strategy_name'] = partitioning_strategy_names_with_indices[input_data_partitioning_strategy_selection].value
+        if (0 < input_data_partitioning_strategy_selection <= number_of_menu_options):
+            initial_data_partitioning_configuration['data_partitioning_strategy_name'] = partitioning_strategy_names_with_indices[input_data_partitioning_strategy_selection].value
 
             while has_menu_been_exited == False:
                 training_split_input = 0
                 testing_split_input = 0
+                
+                training_split_input = validate_user_input_integer("Enter the training percentage of the split as an integer: ", "The value must be an integer", 100)
+                training_split_input = validate_user_input_integer("Enter the testing percentage of the split as an integer: ", "The value must be an integer", 100)
 
-                try:
-                    training_split_input = int(input("Enter the training percentage of the split as an integer: "))
-                    testing_split_input = int(input("Enter the testing percentage of the split as an integer: "))
-
-                    data_partitioning_configuration['training_percentage'] = training_split_input / 100 # Division is done to get the floating point representation.
-                    data_partitioning_configuration['testing_percentage'] = testing_split_input / 100 
+                initial_data_partitioning_configuration['training_percentage'] = training_split_input / 100 # Division is done to get the floating point representation.
+                initial_data_partitioning_configuration['testing_percentage'] = testing_split_input / 100 
                     
-                except: 
-                    print("\nEnter an integer.\n")
-
                 if (training_split_input + testing_split_input == 100):
                     has_menu_been_exited = True
                 else:
                     print("training split input + testing split input != 100%")
                 
-                if (data_partitioning_configuration['data_partitioning_strategy_name'] == data_partitioning_strategy_names.K_FOLD_CROSS_VALIDATION.value):
+                if (initial_data_partitioning_configuration['data_partitioning_strategy_name'] == data_partitioning_strategy_names.K_FOLD_CROSS_VALIDATION.value):
                     number_of_k_fold_input = 0
                 
                     try:
                         number_of_k_fold_input = int(input("Enter number of folds to be used for cross validation, specified as an integer: "))
-                        data_partitioning_configuration['number_of_folds'] = number_of_k_fold_input
+                        initial_data_partitioning_configuration['number_of_folds'] = number_of_k_fold_input
 
                         if (2 <= number_of_k_fold_input < number_of_rows):
                             has_menu_been_exited = True
@@ -82,12 +76,12 @@ def handle_data_partitioning_menu(number_of_rows):
         input_stratified_sampling_selection = input(stratified_sampling_menu_text).lower()
 
         if (input_stratified_sampling_selection == "y"):
-            data_partitioning_configuration['is_stratified'] = True
+            initial_data_partitioning_configuration['is_stratified'] = True
             has_menu_been_exited = True
         elif (input_stratified_sampling_selection == "n"):
-            data_partitioning_configuration['is_stratified'] = False
+            initial_data_partitioning_configuration['is_stratified'] = False
             has_menu_been_exited = True
         else:
             print("\n\nEnter y or n.\n\n")
 
-    return data_partitioning_configuration
+    return initial_data_partitioning_configuration
