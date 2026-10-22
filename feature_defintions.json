@@ -1,0 +1,19 @@
+{
+	"ordinalValues": [
+		{
+			"categories": [
+				["no", "Sometimes", "Frequently", "Always"],
+				["no", "Sometimes", "Frequently", "Always"]
+			]
+		},
+		{ "features": ["CAEC", "CALC"] }
+	],
+	"nominalValues": [
+		"Gender",
+		"family_history_with_overweight",
+		"SMOKE",
+		"FAVC",
+		"SCC",
+		"MTRANS"
+	]
+}

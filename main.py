@@ -1,6 +1,6 @@
 from k_nearest_neighbour import handle_confusion_matrix_menu, handle_nearest_neighbour_conductor_menu, handle_classify_unforeseen_sample_menu
 
-from data_preprocessing import DataProcessor
+from data_processing import DataProcessor
 from data_frame import handle_data_frame_menu, print_dataframe_statistics
 from data_partitioning_configuration import handle_data_partitioning_menu
 

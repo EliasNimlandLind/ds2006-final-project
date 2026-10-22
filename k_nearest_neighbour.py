@@ -9,7 +9,7 @@ import matplotlib.pyplot as mathplotlib
 
 from data_partitioning_configuration import data_partitioning_strategy_names
 
-from data_preprocessing import DataProcessor
+from data_processing import DataProcessor
 from utility import sanitise_string, get_valid_user_input_integer
 
 class K_nearest_neighbour_conductor():

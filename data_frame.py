@@ -2,7 +2,7 @@ import os
 
 import pandas
 
-from data_preprocessing import DataProcessor
+from data_processing import DataProcessor
 
 from utility import get_items_as_a_indexed_dictionary, list_content_of_directory, get_valid_user_input_integer    
 
