@@ -8,11 +8,12 @@ from utility import get_items_as_a_indexed_dictionary, save_strings_to_file, get
 
 
 def main():
-    has_menu_been_exited = False
+    
     k_nearest_neighbour_conductors_without_indices = []
     
     data_processor = DataProcessor()
 
+    has_menu_been_exited = False
     while has_menu_been_exited == False:
         main_menu_option_selection_text = ("1. Load a dataset and create a configuration for the training of the classifiers.\n"
                                            "2. Train classifiers.\n"
@@ -23,7 +24,7 @@ def main():
                                            "0. Exit the application.\n"
                                            "Enter the choice of how to continue, as an integer: ")
         main_menu_selected_option = get_valid_user_input_integer(main_menu_option_selection_text, "The choice must be specified as an integer.", 6, 0)
-        
+    
         match main_menu_selected_option:
             case 1:
                 dataframe, normalized_and_encoded_dataframe = handle_data_frame_menu(data_processor)
@@ -81,7 +82,6 @@ def main():
                         model_text_to_save += str(current_k_nearest_neighbour_conductor)
                     texts_to_save.append(model_text_to_save)
                     
-            
                     was_all_save_operations_successful = save_strings_to_file(texts_to_save, file_name_input)
 
                     if was_all_save_operations_successful == True:
