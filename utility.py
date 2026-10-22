@@ -23,7 +23,7 @@ def validate_user_input_integer(text_to_display, value_error_message = "Enter an
     
     Returns: An integer representation of the integer represented as string is returned if the validation succeed.
     """
-    user_input_as_string = input(text_to_display)
+    user_input_as_string = input(text_to_display).strip()
     try:
         user_input_as_integer = int(user_input_as_string)
         

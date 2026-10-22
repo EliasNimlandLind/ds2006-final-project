@@ -230,32 +230,48 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_
                     
                     current_column_index = 0
                     for current_column_name in raw_dataframe_loaded_from_file.head(1).columns[:-1]:
-                        
                         current_column = raw_dataframe_loaded_from_file[
                             raw_dataframe_loaded_from_file.columns[current_column_index]
                         ]
+                        target_type = type(current_column.tolist()[0])
 
-                        current_column = raw_dataframe_loaded_from_file[
-                            raw_dataframe_loaded_from_file.columns[current_column_index]
-                        ]
+                        unique_values_in_current_column = current_column.unique()
 
+                        unique_values_in_current_column_as_text = "\nPossible choices:"
+                        for current_unique_value_in_current_column in unique_values_in_current_column:
+                            unique_values_in_current_column_as_text += f"\n{current_unique_value_in_current_column}"
+                            
+                        is_the_current_value_assigned = False
+                        while not is_the_current_value_assigned:
+                            if (target_type == str):
+                                print(unique_values_in_current_column_as_text)
 
-                        target_type = type(current_column.dropna().tolist()[0])
-                        print(target_type)
-                        
-                        has_the_current_value_been_assigned = False
-                        while not has_the_current_value_been_assigned:
-                            current_key_input_value = input(
+                            current_input_value = input(
                                 f"Enter value for {current_column_name}: "
                             ).strip()
 
-                            try:
-                                current_key_input_value = target_type(current_key_input_value)
-                                has_the_current_value_been_assigned = True
-                                current_column_index = current_column_index + 1
+                            try:                                
+                                # String values are limited to the current category, thus, is the existence of the chosen value in the data a requirement.
+                                if target_type is str and current_input_value in unique_values_in_current_column:
+                                    current_input_value = target_type(current_input_value)
+
+                                    raw_dataframe_loaded_from_input[current_column_name] = current_input_value
+                                    is_the_current_value_assigned = True
+                                    current_column_index = current_column_index + 1
+
+                                elif target_type is str:
+                                    error_message = f"The input is limited to these choices: {unique_values_in_current_column_as_text}"
+                                    print(error_message)
+                                
+                                else:
+                                    current_input_value = target_type(current_input_value)
+                                    
+                                    raw_dataframe_loaded_from_input[current_column_name] = current_input_value
+                                    is_the_current_value_assigned = True
+                                    current_column_index = current_column_index + 1
 
                             except (TypeError, ValueError) as exception:
-                                print(f"Invalid input: {exception}")
+                                print(f"\nInvalid input: {exception}\n")
 
                     input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(raw_dataframe_loaded_from_input)
 
