@@ -3,6 +3,8 @@ import pandas
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import MinMaxScaler, OneHotEncoder, OrdinalEncoder
 
+from utility import read_content_from_json_file
+
 
 class DataProcessor:
     def __init__(self):
@@ -27,27 +29,23 @@ class DataProcessor:
             ],
             remainder="passthrough", 
             ).set_output(transform="pandas")
+        
         self.min_max_scaler = MinMaxScaler()
 
     def get_ordinal_values(self):
-        categories = [
-            ["no", "Sometimes", "Frequently", "Always"],
-            ["no", "Sometimes", "Frequently", "Always"],
-        ]
-        features = ["CAEC", "CALC"]
-
-        ordinal_values = [categories, features] 
+        json_data = read_content_from_json_file("feature_definitions")
+    
+        categories = json_data["ordinalValues"][0]["categories"]
+        features = json_data["ordinalValues"][1]["features"]
+        ordinal_values = [categories, features]
+        
         return ordinal_values
 
     def get_nominal_vales(self) -> list[str]:
-        return [
-            "Gender",
-            "family_history_with_overweight",
-            "SMOKE",
-            "FAVC",
-            "SCC",
-            "MTRANS",
-        ]
+        json_data = read_content_from_json_file("feature_definitions")
+        nominal_values = json_data["nominalValues"]
+        
+        return nominal_values
 
     def fit_transform(self, raw_features):
         self.features = raw_features.columns.tolist()
