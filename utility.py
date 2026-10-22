@@ -17,6 +17,10 @@ def list_content_of_directory(directory_name):
         
     return os.listdir(directory_name)
 
+def sanitise_user_input(input_to_sanitise):
+    input_to_sanitise = input_to_sanitise.strip()
+    return input_to_sanitise
+
 def validate_user_input_integer(text_to_display, value_error_message = "Enter an integer", maximum_input_value = 0, minimum_input_value = 1):
     """
     This function tries to convert an integer represented as a string, gathered from the user.

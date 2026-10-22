@@ -10,7 +10,7 @@ import matplotlib.pyplot as mathplotlib
 from data_partitioning_configuration import data_partitioning_strategy_names
 
 from data_preprocessing import DataProcessor
-from utility import validate_user_input_integer
+from utility import sanitise_user_input, validate_user_input_integer
 
 class K_nearest_neighbour_conductor():
     def __init__(self, k_value, dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration):
@@ -235,24 +235,24 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_
                         ]
                         target_type = type(current_column.tolist()[0])
 
-                        unique_values_in_current_column = current_column.unique()
+                        possible_choices_as_unique_values_current_column = current_column.unique()
 
-                        unique_values_in_current_column_as_text = "\nPossible choices:"
-                        for current_unique_value_in_current_column in unique_values_in_current_column:
-                            unique_values_in_current_column_as_text += f"\n{current_unique_value_in_current_column}"
+                        possible_choices_text = "\nPossible choices:"
+                        for current_unique_value_in_current_column in possible_choices_as_unique_values_current_column:
+                            possible_choices_text += f"\n{current_unique_value_in_current_column}"
                             
                         is_the_current_value_assigned = False
                         while not is_the_current_value_assigned:
                             if (target_type == str):
-                                print(unique_values_in_current_column_as_text)
+                                print(possible_choices_text)
 
-                            current_input_value = input(
+                            sanitise_user_input(current_input_value = input(
                                 f"Enter value for {current_column_name}: "
-                            ).strip()
+                            ))
 
                             try:                                
                                 # String values are limited to the current category, thus, is the existence of the chosen value in the data a requirement.
-                                if target_type is str and current_input_value in unique_values_in_current_column:
+                                if target_type is str and current_input_value in possible_choices_as_unique_values_current_column:
                                     current_input_value = target_type(current_input_value)
 
                                     raw_dataframe_loaded_from_input[current_column_name] = current_input_value
@@ -260,7 +260,7 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_
                                     current_column_index = current_column_index + 1
 
                                 elif target_type is str:
-                                    error_message = f"The input is limited to these choices: {unique_values_in_current_column_as_text}"
+                                    error_message = f"The input is limited to these choices: {possible_choices_text}"
                                     print(error_message)
                                 
                                 else:
