@@ -99,7 +99,13 @@ class K_nearest_neighbour_conductor():
 
 def handle_nearest_neighbour_conductor_menu(dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration):
     k_nearest_neighbour_conductors = []
-
+    if data_partitioning_configuration['use_test_mode'] == True:
+        for current_k_nearest_neighbour_conductor_index in range(1, 5):
+            current_k_nearest_neighbour_conductor = K_nearest_neighbour_conductor(current_k_nearest_neighbour_conductor_index, dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration)
+            k_nearest_neighbour_conductors.append(current_k_nearest_neighbour_conductor)
+        
+        return k_nearest_neighbour_conductors       
+        
     has_menu_been_exited = False
     while has_menu_been_exited == False:
         input_number_of_experiments_using_k_nearest_neighbours = 0
@@ -205,7 +211,7 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_
                 case 2:
                     raw_dataframe_loaded_from_input = pandas.DataFrame(index=[0])
                     for current_key in raw_dataframe_loaded_from_file.columns:
-                    
+                        
                         unique_values = (
                             raw_dataframe_loaded_from_file[current_key]
                             .astype(str)
