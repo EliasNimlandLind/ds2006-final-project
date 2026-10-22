@@ -36,7 +36,7 @@ def save_strings_to_file(strings_to_save: list[str], save_file_name = "save_file
     
     return was_all_save_operations_successful
 
-def sanitise_user_input(input_to_sanitise: str):
+def sanitise_string(input_to_sanitise: str):
     input_to_sanitise = input_to_sanitise.strip()
     return input_to_sanitise
 
@@ -46,7 +46,7 @@ def get_valid_user_input_integer(text_to_display: str, value_error_message = "En
     
     Returns: An integer representation of the integer represented as string is returned if the validation succeed.
     """
-    user_input_as_string = sanitise_user_input(input(text_to_display))
+    user_input_as_string = sanitise_string(input(text_to_display))
     try:
         user_input_as_integer = int(user_input_as_string)
 

@@ -10,7 +10,7 @@ import matplotlib.pyplot as mathplotlib
 from data_partitioning_configuration import data_partitioning_strategy_names
 
 from data_preprocessing import DataProcessor
-from utility import sanitise_user_input, get_valid_user_input_integer
+from utility import sanitise_string, get_valid_user_input_integer
 
 class K_nearest_neighbour_conductor():
     def __init__(self, k_value, dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration):
@@ -228,7 +228,7 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_
                             if (target_type == str):
                                 print(possible_choices_text)
 
-                            sanitise_user_input(current_input_value = input(
+                            sanitise_string(current_input_value = input(
                                 f"Enter value for {current_column_name}: "
                             ))
 
