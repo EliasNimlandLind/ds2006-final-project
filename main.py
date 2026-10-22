@@ -35,7 +35,7 @@ def main():
                 training_configuration_text = ("\n*********************************************\n"
                                             "EXPERIMENT CONFIGURATION\n\n"
                                             "Data Partitioning Strategy:\n"
-                                            f"{data_partitioning_configuration['data_partitioning_strategy_name'].value}\n\n"
+                                            f"{data_partitioning_configuration['data_partitioning_strategy_name']}\n\n"
                                             "k-NN Experiments:\n\n")
 
                 k_nearest_neighbour_conductors_with_indices = get_items_as_a_indexed_dictionary(k_nearest_neighbour_conductors_without_indices)
