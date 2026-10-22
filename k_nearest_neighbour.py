@@ -208,23 +208,6 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_
                     has_menu_been_exited = True
                 
                 case 2:
-                    "Sample values"
-                    "Female"
-                    "21"
-                    "1.72"
-                    "80"
-                    "yes"
-                    "yes"
-                    "2"
-                    "3"
-                    "Frequently"
-                    "no"
-                    "2"
-                    "yes"
-                    "2"
-                    "1"
-                    "Sometimes"
-                    "Public_Transportation"
 
                     raw_dataframe_loaded_from_input = pandas.DataFrame(index=[0])
                     
