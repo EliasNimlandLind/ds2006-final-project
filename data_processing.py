@@ -32,7 +32,7 @@ class DataProcessor:
         
         self.min_max_scaler = MinMaxScaler()
 
-    def get_ordinal_values(self):
+    def get_ordinal_values(self) -> list[str]:
         json_data = read_content_from_json_file("feature_definitions")
     
         categories = json_data["ordinalValues"][0]["categories"]
