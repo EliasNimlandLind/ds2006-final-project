@@ -27,7 +27,7 @@ class K_nearest_neighbour_conductor():
             
             if (self.data_partitioning_strategy['data_partitioning_strategy_name'] == data_partitioning_strategy_names.TRAIN_TEST_SPLIT):
                     # Obtains the predictions from the kNN classifier:
-                    model_statistics = (f"\n{self.get_k_value_text()}\n"
+                    model_statistics = (f"{self.get_k_value_text()}\n"
                                             f"Accuracy: {accuracy_score(self.classes_test, self.predictions)}\n\n"
                                             f"  {classification_report(self.classes_test, self.predictions)}\n\n"
                                             )

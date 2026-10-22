@@ -4,7 +4,7 @@ from data_preprocessing import DataProcessor
 from data_frame import handle_data_frame_menu, print_dataframe_statistics
 from data_partitioning_configuration import handle_data_partitioning_menu
 
-from utility import get_items_as_string_with_indices, validate_user_input_integer
+from utility import get_items_as_string_with_indices, save_strings_to_file, validate_user_input_integer
 
 
 def main():
@@ -15,13 +15,13 @@ def main():
 
     while has_menu_been_exited == False:
         main_menu_option_selection_text = ("1. Load a dataset and create a configuration for the experiments.\n"
-                                     "2. Conduct experiments.\n"
-                                     "3. Show confusion matrix.\n"
-                                     "4. Save data to file.\n"
-                                     "5. Display model statistics.\n"
-                                     "6. Classify an unforeseen sample.\n"
-                                     "0. Exit the application.\n"
-                                     "Enter the choice of how to continue, as an integer: ")
+                                           "2. Conduct experiments.\n"
+                                           "3. Show confusion matrix.\n"
+                                           "4. Save data to file.\n"
+                                           "5. Display model statistics.\n"
+                                           "6. Classify an unforeseen sample.\n"
+                                           "0. Exit the application.\n"
+                                           "Enter the choice of how to continue, as an integer: ")
         main_menu_selected_option = validate_user_input_integer(main_menu_option_selection_text, "The choice must be specified as an integer.", 6, 0)
         
         match main_menu_selected_option:
@@ -60,39 +60,32 @@ def main():
             case 4:
                 try:  
                     file_name_input = input("Enter the file name that will contain all data: ")
-                    complete_file_name = file_name_input
-                    file_extension = ".txt"
+                    texts_to_save = []
 
-                    if complete_file_name == "":
-                        complete_file_name = f"experiments_save_file{file_extension}"
+                    dataframe_row_count = 50
+                    dataframes_text_to_save = f"Dataframes - First {dataframe_row_count} rows\n"
+                    dataframes_text_to_save += "\nRaw\n\n"
+                    dataframes_text_to_save += f"{dataframe.head(dataframe_row_count).to_string()}\n"
 
-                    if not complete_file_name.endswith(file_extension):
-                        complete_file_name += file_extension
-                    
-                    with open(complete_file_name, mode="w") as save_file:
-                        dataframe_row_count = 50
-                        save_file_dataframes_text = f"Dataframes - First {dataframe_row_count} rows\n"
-                        save_file_dataframes_text += "\nRaw\n"
-                        save_file_dataframes_text += f"{dataframe.head(dataframe_row_count).to_string()}\n"
+                    dataframes_text_to_save += f"\nNormalised and encoded\n\n"
+                    dataframes_text_to_save += normalized_and_encoded_dataframe.head(dataframe_row_count).to_string()
+                    texts_to_save.append(dataframes_text_to_save)
 
-                        save_file_dataframes_text += f"\nNormalised and encoded\n"
-                        save_file_dataframes_text += normalized_and_encoded_dataframe.head(dataframe_row_count).to_string()
+                    data_partitioning_text_to_save = "\n\nData partitioning configuration\n\n"
+                    for current_configuration_name, current_configuration_value in data_partitioning_configuration.items():
+                        data_partitioning_text_to_save += f"{current_configuration_name}: {current_configuration_value}\n"
+                    texts_to_save.append(data_partitioning_text_to_save)
 
-                        save_file.write(save_file_dataframes_text)
+                    model_text_to_save = "\nThe models\n\n"
+                    for current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_without_indices:
+                        model_text_to_save += str(current_k_nearest_neighbour_conductor)
+                    texts_to_save.append(model_text_to_save)
 
-                        save_file_data_partitioning_text = "\n\nData partitioning configuration\n\n"
-                        for current_configuration_name, current_configuration_value in data_partitioning_configuration.items():
-                            save_file_data_partitioning_text += f"{current_configuration_name}: {current_configuration_value}\n"
+                    was_all_save_operations_successful = save_strings_to_file(texts_to_save, file_name_input)
 
-                        save_file.write(save_file_data_partitioning_text)
-
-                        save_file_model_text = "\nThe models\n\n"
-                        for current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_without_indices:
-                            save_file_model_text += str(current_k_nearest_neighbour_conductor)
-                        
-                        save_file.write(save_file_model_text)
-                        
+                    if was_all_save_operations_successful == True:
                         print("\nThe data was successfully saved.\n")
+                    
                 except Exception as exception:
                     print(f"\n{exception}\n")
 
