@@ -54,6 +54,7 @@ class K_nearest_neighbour_conductor():
                     scores = cross_val_score(self.k_neighbours_classifier, X=self.features, y=self.classes, cv=cv, scoring=current_score_type)
             
                     model_statistics += f"\n{current_score_type}:\n    {scores}\n    Mean: {scores.mean()}\n\n"
+                    
         except Exception as exception:
             print(f"\n{exception}\n")
         
