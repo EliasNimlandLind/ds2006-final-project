@@ -1,6 +1,6 @@
 from enum import Enum
 
-from utility import get_items_as_string_with_indices, validate_user_input_integer
+from utility import get_items_as_a_indexed_dictionary, get_valid_user_input_integer
 
 
 class data_partitioning_strategy_names(Enum):
@@ -17,7 +17,7 @@ def handle_data_partitioning_menu(number_of_rows):
         'use_test_mode': False
     }
 
-    partitioning_strategy_names_with_indices = get_items_as_string_with_indices(data_partitioning_strategy_names)
+    partitioning_strategy_names_with_indices = get_items_as_a_indexed_dictionary(data_partitioning_strategy_names)
 
     data_partitioning_strategy_selection_menu_text = ""
     for current_index, current_partitioning_strategy in partitioning_strategy_names_with_indices.items():
@@ -32,7 +32,7 @@ def handle_data_partitioning_menu(number_of_rows):
         number_of_menu_options = len(partitioning_strategy_names_with_indices)
         
         input_data_partitioning_strategy_selection = 0
-        input_data_partitioning_strategy_selection = validate_user_input_integer(data_partitioning_strategy_selection_menu_text, number_of_menu_options)
+        input_data_partitioning_strategy_selection = get_valid_user_input_integer(data_partitioning_strategy_selection_menu_text, number_of_menu_options)
 
         if input_data_partitioning_strategy_selection == default_data_partitioning_configuration_index:
             data_partitioning_configuration["use_test_mode"] = True
@@ -45,12 +45,12 @@ def handle_data_partitioning_menu(number_of_rows):
                 training_split_input = 0
                 testing_split_input = 0
                 
-                training_split_input = validate_user_input_integer("Enter the training percentage of the split as an integer: ", "The value must be an integer", 100)
-                training_split_input = validate_user_input_integer("Enter the testing percentage of the split as an integer: ", "The value must be an integer", 100)
+                training_split_input = get_valid_user_input_integer("Enter the training percentage of the split as an integer: ", "The value must be an integer", maximum_input_value=100)
+                testing_split_input = get_valid_user_input_integer("Enter the testing percentage of the split as an integer: ", "The value must be an integer", maximum_input_value=100)
 
                 data_partitioning_configuration['training_percentage'] = training_split_input / 100 # Division is done to get the floating point representation.
                 data_partitioning_configuration['testing_percentage'] = testing_split_input / 100 
-                    
+
                 if (training_split_input + testing_split_input == 100):
                     has_menu_been_exited = True
                 else:

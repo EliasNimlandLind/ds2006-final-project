@@ -4,7 +4,7 @@ import pandas
 
 from data_preprocessing import DataProcessor
 
-from utility import get_items_as_string_with_indices, list_content_of_directory, validate_user_input_integer    
+from utility import get_items_as_a_indexed_dictionary, list_content_of_directory, get_valid_user_input_integer    
 
 
 dataframe = None
@@ -13,7 +13,7 @@ normalized_and_encoded_dataframe = None
 def handle_data_frame_menu(data_processor: DataProcessor, datasets_directory_name = "datasets/training/"):
     datasets_found_in_directory = list_content_of_directory(datasets_directory_name)
     
-    datasets_with_indices = get_items_as_string_with_indices(datasets_found_in_directory)
+    datasets_with_indices = get_items_as_a_indexed_dictionary(datasets_found_in_directory)
 
     dataset_selection_menu_text = ""
     for current_index, dataset in datasets_with_indices.items():
@@ -27,7 +27,7 @@ def handle_data_frame_menu(data_processor: DataProcessor, datasets_directory_nam
     while has_menu_been_exited == False:
         number_of_menu_options = len(datasets_with_indices)
         input_dataset_selection = 0
-        input_dataset_selection = validate_user_input_integer(dataset_selection_menu_text, "Enter an integer", number_of_menu_options)
+        input_dataset_selection = get_valid_user_input_integer(dataset_selection_menu_text, "Enter an integer", number_of_menu_options)
 
         if (0 < input_dataset_selection <= number_of_menu_options):
             path_to_dataset_to_load = f"{datasets_directory_name}/{datasets_with_indices[input_dataset_selection]}"

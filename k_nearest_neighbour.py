@@ -10,7 +10,7 @@ import matplotlib.pyplot as mathplotlib
 from data_partitioning_configuration import data_partitioning_strategy_names
 
 from data_preprocessing import DataProcessor
-from utility import sanitise_user_input, validate_user_input_integer
+from utility import sanitise_user_input, get_valid_user_input_integer
 
 class K_nearest_neighbour_conductor():
     def __init__(self, k_value, dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration):
@@ -54,7 +54,7 @@ class K_nearest_neighbour_conductor():
                     scores = cross_val_score(self.k_neighbours_classifier, X=self.features, y=self.classes, cv=cv, scoring=current_score_type)
             
                     model_statistics += f"\n{current_score_type}:\n    {scores}\n    Mean: {scores.mean()}\n\n"
-                    
+
         except Exception as exception:
             print(f"\n{exception}\n")
         
@@ -111,13 +111,13 @@ def handle_nearest_neighbour_conductor_menu(dataframe, normalized_and_encoded_da
     has_menu_been_exited = False
     while has_menu_been_exited == False:
         input_number_of_classifiers_to_train_using_k_nearest_neighbours = 0
-        input_number_of_classifiers_to_train_using_k_nearest_neighbours = validate_user_input_integer("Enter the number of classifiers to train using k nearest neighbour: ", "The number of classifiers to train must be an integer", 100, 1)
+        input_number_of_classifiers_to_train_using_k_nearest_neighbours = get_valid_user_input_integer("Enter the number of classifiers to train using k nearest neighbour: ", "The number of classifiers to train must be an integer", 100, 1)
 
         if (input_number_of_classifiers_to_train_using_k_nearest_neighbours > 0):
             for current_k_nearest_neighbour_conductor_index in range(input_number_of_classifiers_to_train_using_k_nearest_neighbours):
                 is_current_k_value_valid = False
                 while is_current_k_value_valid == False:
-                    current_k_value = validate_user_input_integer(f"Enter the k value for the classifier with index {current_k_nearest_neighbour_conductor_index + 1}: ", "The current k value must be an integer")
+                    current_k_value = get_valid_user_input_integer(f"Enter the k value for the classifier with index {current_k_nearest_neighbour_conductor_index + 1}: ", "The current k value must be an integer")
 
                     if (current_k_value > 0):
                         current_k_nearest_neighbour_conductor = K_nearest_neighbour_conductor(current_k_value, dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration)
@@ -148,7 +148,7 @@ def handle_confusion_matrix_menu(k_nearest_neighbour_conductors_with_indices):
             
             confusion_matrix_index_input = 0
             
-            confusion_matrix_index_input = validate_user_input_integer("Enter the index of the classifier for which you want to display the associated confusion matrix: ", "The number representing a classifier must be an integer", len(k_nearest_neighbour_conductors_with_indices.items()))
+            confusion_matrix_index_input = get_valid_user_input_integer("Enter the index of the classifier for which you want to display the associated confusion matrix: ", "The number representing a classifier must be an integer", len(k_nearest_neighbour_conductors_with_indices.items()))
                 
             if 0 < confusion_matrix_index_input <= len(k_nearest_neighbour_conductors_with_indices.items()):
                 k_nearest_neighbour_conductors_with_indices[confusion_matrix_index_input].display_confusion_matrix()
@@ -175,7 +175,7 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_
 
             number_of_classifiers = len(k_nearest_neighbour_conductors)
     
-            selected_classifier_input = validate_user_input_integer(text_to_display=classify_unforeseen_sample_classifier_menu_text, maximum_input_value=number_of_classifiers)
+            selected_classifier_input = get_valid_user_input_integer(text_to_display=classify_unforeseen_sample_classifier_menu_text, maximum_input_value=number_of_classifiers)
 
             if (selected_classifier_input is None):
                 raise ValueError("Invalid input: The input was likely not an integer.")

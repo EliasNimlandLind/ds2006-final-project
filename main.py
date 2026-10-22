@@ -4,7 +4,7 @@ from data_preprocessing import DataProcessor
 from data_frame import handle_data_frame_menu, print_dataframe_statistics
 from data_partitioning_configuration import handle_data_partitioning_menu
 
-from utility import get_items_as_string_with_indices, save_strings_to_file, validate_user_input_integer
+from utility import get_items_as_a_indexed_dictionary, save_strings_to_file, get_valid_user_input_integer
 
 
 def main():
@@ -22,7 +22,7 @@ def main():
                                            "6. Classify an unforeseen sample.\n"
                                            "0. Exit the application.\n"
                                            "Enter the choice of how to continue, as an integer: ")
-        main_menu_selected_option = validate_user_input_integer(main_menu_option_selection_text, "The choice must be specified as an integer.", 6, 0)
+        main_menu_selected_option = get_valid_user_input_integer(main_menu_option_selection_text, "The choice must be specified as an integer.", 6, 0)
         
         match main_menu_selected_option:
             case 1:
@@ -38,7 +38,7 @@ def main():
                                             f"{data_partitioning_configuration['data_partitioning_strategy_name'].value}\n\n"
                                             "k-NN Experiments:\n\n")
 
-                k_nearest_neighbour_conductors_with_indices = get_items_as_string_with_indices(k_nearest_neighbour_conductors_without_indices)
+                k_nearest_neighbour_conductors_with_indices = get_items_as_a_indexed_dictionary(k_nearest_neighbour_conductors_without_indices)
                 for current_index, current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_with_indices.items():
                     training_configuration_text += f"Experiment: {current_index} {current_k_nearest_neighbour_conductor.get_k_value_text()}\n"  
                 training_configuration_text += "*********************************************"
@@ -58,7 +58,7 @@ def main():
                 handle_confusion_matrix_menu(k_nearest_neighbour_conductors_with_indices)
 
             case 4:
-                try:  
+                try:
                     file_name_input = input("Enter the file name that will contain all data: ")
                     texts_to_save = []
 
@@ -80,12 +80,13 @@ def main():
                     for current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_without_indices:
                         model_text_to_save += str(current_k_nearest_neighbour_conductor)
                     texts_to_save.append(model_text_to_save)
-
+                    
+            
                     was_all_save_operations_successful = save_strings_to_file(texts_to_save, file_name_input)
 
                     if was_all_save_operations_successful == True:
                         print("\nThe data was successfully saved.\n")
-                    
+
                 except Exception as exception:
                     print(f"\n{exception}\n")
 

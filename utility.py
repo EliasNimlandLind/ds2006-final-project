@@ -1,7 +1,7 @@
 import os
 
 
-def get_items_as_string_with_indices(items_without_indices):
+def get_items_as_a_indexed_dictionary(items_without_indices: list) -> dict[int, any]:
     """
         Returns a dictionary comprising each index as a key and each corresponding value being an item based on the argument.
     """
@@ -11,26 +11,26 @@ def get_items_as_string_with_indices(items_without_indices):
     }
     return items_with_indices
 
-def list_content_of_directory(directory_name):
+def list_content_of_directory(directory_name: str) -> list[str]:
     if os.path.exists(directory_name) == False:
         os.mkdir(directory_name)
         
     return os.listdir(directory_name)
 
-def sanitise_user_input(input_to_sanitise):
+def sanitise_user_input(input_to_sanitise: str):
     input_to_sanitise = input_to_sanitise.strip()
     return input_to_sanitise
 
-def validate_user_input_integer(text_to_display, value_error_message = "Enter an integer", maximum_input_value = 0, minimum_input_value = 1):
+def get_valid_user_input_integer(text_to_display: str, value_error_message = "Enter an integer", maximum_input_value = 0, minimum_input_value = 1):
     """
     This function tries to convert an integer represented as a string, gathered from the user.
     
     Returns: An integer representation of the integer represented as string is returned if the validation succeed.
     """
-    user_input_as_string = input(text_to_display).strip()
+    user_input_as_string = sanitise_user_input(input(text_to_display))
     try:
         user_input_as_integer = int(user_input_as_string)
-        
+
         if maximum_input_value > minimum_input_value:
             if minimum_input_value <= user_input_as_integer <= maximum_input_value:
                 return user_input_as_integer
@@ -45,7 +45,7 @@ def validate_user_input_integer(text_to_display, value_error_message = "Enter an
     except ValueError as value_error:
         print(f"\nInvalid input: {value_error}\n")
 
-def save_strings_to_file(strings_to_save, save_file_name = "experiments_save_file", file_extension = ".txt"):
+def save_strings_to_file(strings_to_save: list[str], save_file_name = "save_files/experiments_save_file", file_extension = ".txt"):
     was_all_save_operations_successful = False
     complete_file_name = save_file_name
 
