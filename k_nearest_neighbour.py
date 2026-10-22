@@ -19,7 +19,7 @@ class K_nearest_neighbour_conductor():
         self.normalized_and_encoded_dataframe = normalized_and_encoded_dataframe
         self.data_partitioning_strategy = data_partitioning_configuration
         
-    def get_k_value_text(self):
+    def get_k_value_text(self) -> str:
         return f"k = {self.k_value}"
 
     def __str__(self):
@@ -60,7 +60,7 @@ class K_nearest_neighbour_conductor():
         
         return model_statistics
 
-    def display_confusion_matrix(self):
+    def display_confusion_matrix(self) -> None:
         try:
             confusion_matrix_display = ConfusionMatrixDisplay.from_estimator(
                 self.k_neighbours_classifier,
@@ -75,7 +75,7 @@ class K_nearest_neighbour_conductor():
         except Exception as exception:
             print(f"\n{exception}\n")
         
-    def execute_training(self, data_processor: DataProcessor):        
+    def execute_training(self, data_processor: DataProcessor) -> None:        
         all_features = self.normalized_and_encoded_dataframe.drop(data_processor.get_last_column_of_dataframe(self.normalized_and_encoded_dataframe), axis=1)
         # Creates a dataframe from solely the data in the last column.
         all_classes = data_processor.get_last_column_as_a_separate_dataframe(self.dataframe)
@@ -99,7 +99,7 @@ class K_nearest_neighbour_conductor():
         self.k_neighbours_classifier.fit(features_train, classes_train)
         self.predictions = self.k_neighbours_classifier.predict(features_test)
 
-def handle_nearest_neighbour_conductor_menu(dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration):
+def handle_nearest_neighbour_conductor_menu(dataframe: pandas.DataFrame, normalized_and_encoded_dataframe: pandas.DataFrame, data_partitioning_configuration: dict[str, any]) -> list[K_nearest_neighbour_conductor]:
     k_nearest_neighbour_conductors = []
     if data_partitioning_configuration['use_test_mode'] == True:
         for current_k_nearest_neighbour_conductor_index in range(1, 5):
@@ -159,7 +159,7 @@ def handle_confusion_matrix_menu(k_nearest_neighbour_conductors_with_indices):
     except Exception as exception:
         print(f"\n{exception}\n")
 
-def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_processor):
+def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors: list[K_nearest_neighbour_conductor], data_processor: DataProcessor) -> None:
     if not k_nearest_neighbour_conductors:
         return print("\nTrained classifiers are required to classify unforeseen samples.\n")
 

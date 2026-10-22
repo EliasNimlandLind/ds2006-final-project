@@ -39,7 +39,7 @@ class DataProcessor:
         ordinal_values = [categories, features] 
         return ordinal_values
 
-    def get_nominal_vales(self):
+    def get_nominal_vales(self) -> list[str]:
         return [
             "Gender",
             "family_history_with_overweight",
@@ -79,10 +79,10 @@ class DataProcessor:
             axis=1,
         )
 
-    def get_last_column_as_a_separate_dataframe(self, dataframe):
+    def get_last_column_as_a_separate_dataframe(self, dataframe: pandas.DataFrame):
         return dataframe[self.get_last_column_of_dataframe(dataframe)]
 
-    def get_last_column_of_dataframe(self, dataframe):
+    def get_last_column_of_dataframe(self, dataframe: pandas.DataFrame):
         """
         This can be used to get the classes, if these are contained in the last column.
         """

@@ -7,7 +7,7 @@ class data_partitioning_strategy_names(Enum):
     TRAIN_TEST_SPLIT = "Train/Test Split"
     K_FOLD_CROSS_VALIDATION = "K-Fold Cross-Validation"
 
-def handle_data_partitioning_menu(number_of_rows):
+def handle_data_partitioning_menu(number_of_rows: int):
     data_partitioning_configuration = {
         'is_stratified': True,
         'data_partitioning_strategy_name': data_partitioning_strategy_names.TRAIN_TEST_SPLIT,
