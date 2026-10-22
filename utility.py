@@ -41,13 +41,9 @@ def validate_user_input_integer(text_to_display, value_error_message = "Enter an
     except ValueError as value_error:
         print(f"\nInvalid input: {value_error}\n")
 
-def save_strings_to_file(strings_to_save, save_file_name):
+def save_strings_to_file(strings_to_save, save_file_name = "experiments_save_file", file_extension = ".txt"):
     was_all_save_operations_successful = False
     complete_file_name = save_file_name
-    file_extension = ".txt"
-
-    if complete_file_name == "":
-        complete_file_name = f"experiments_save_file{file_extension}"
 
     if not complete_file_name.endswith(file_extension):
         complete_file_name += file_extension

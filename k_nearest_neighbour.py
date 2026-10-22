@@ -73,7 +73,7 @@ class K_nearest_neighbour_conductor():
         except Exception as exception:
             print(f"\n{exception}\n")
         
-    def execute_experiment(self, data_processor: DataProcessor):        
+    def execute_training(self, data_processor: DataProcessor):        
         all_features = self.normalized_and_encoded_dataframe.drop(data_processor.get_last_column_of_dataframe(self.normalized_and_encoded_dataframe), axis=1)
         # Creates a dataframe from solely the data in the last column.
         all_classes = data_processor.get_last_column_as_a_separate_dataframe(self.dataframe)
@@ -108,14 +108,14 @@ def handle_nearest_neighbour_conductor_menu(dataframe, normalized_and_encoded_da
         
     has_menu_been_exited = False
     while has_menu_been_exited == False:
-        input_number_of_experiments_using_k_nearest_neighbours = 0
-        input_number_of_experiments_using_k_nearest_neighbours = validate_user_input_integer("Enter the number of experiments to conduct using k nearest neighbour: ", "The number of experiments to conduct must be an integer", 100, 1)
+        input_number_of_classifiers_to_train_using_k_nearest_neighbours = 0
+        input_number_of_classifiers_to_train_using_k_nearest_neighbours = validate_user_input_integer("Enter the number of classifiers to train using k nearest neighbour: ", "The number of classifiers to train must be an integer", 100, 1)
 
-        if (input_number_of_experiments_using_k_nearest_neighbours > 0):
-            for current_k_nearest_neighbour_conductor_index in range(input_number_of_experiments_using_k_nearest_neighbours):
+        if (input_number_of_classifiers_to_train_using_k_nearest_neighbours > 0):
+            for current_k_nearest_neighbour_conductor_index in range(input_number_of_classifiers_to_train_using_k_nearest_neighbours):
                 is_current_k_value_valid = False
                 while is_current_k_value_valid == False:
-                    current_k_value = validate_user_input_integer(f"Enter the k value for experiment number {current_k_nearest_neighbour_conductor_index + 1}: ", "The current k value must be an integer")
+                    current_k_value = validate_user_input_integer(f"Enter the k value for the classifier with index {current_k_nearest_neighbour_conductor_index + 1}: ", "The current k value must be an integer")
 
                     if (current_k_value > 0):
                         current_k_nearest_neighbour_conductor = K_nearest_neighbour_conductor(current_k_value, dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration)
@@ -127,14 +127,14 @@ def handle_nearest_neighbour_conductor_menu(dataframe, normalized_and_encoded_da
             has_menu_been_exited = True
 
         else: 
-            print("\nThe number of experiments to conduct must be greater than 0.\n")
+            print("\nThe number of classifiers to train must be greater than 0.\n")
             
     return k_nearest_neighbour_conductors
 
 def handle_confusion_matrix_menu(k_nearest_neighbour_conductors_with_indices):
     try:
         if not k_nearest_neighbour_conductors_with_indices:
-            raise ValueError("Experiments must be conducted before display the corresponding confusion matrices.")
+            raise ValueError("Classifiers must be trained before display the corresponding confusion matrices.")
 
         has_menu_been_exited = False
         while has_menu_been_exited == False:
@@ -146,20 +146,20 @@ def handle_confusion_matrix_menu(k_nearest_neighbour_conductors_with_indices):
             
             confusion_matrix_index_input = 0
             
-            confusion_matrix_index_input = validate_user_input_integer("Enter the number corresponding to the experiment for which you want to display the associated confusion matrix: ", "The number representing an experiment must be an integer", len(k_nearest_neighbour_conductors_with_indices.items()))
+            confusion_matrix_index_input = validate_user_input_integer("Enter the index of the classifier for which you want to display the associated confusion matrix: ", "The number representing a classifier must be an integer", len(k_nearest_neighbour_conductors_with_indices.items()))
                 
             if 0 < confusion_matrix_index_input <= len(k_nearest_neighbour_conductors_with_indices.items()):
                 k_nearest_neighbour_conductors_with_indices[confusion_matrix_index_input].display_confusion_matrix()
                 has_menu_been_exited = True
             else:
-                print(f"\nThe number must be between 0 and the number of experiments, i.e.{len(k_nearest_neighbour_conductors_with_indices.items())}\n")
+                print(f"\nThe number must be between 0 and the number of classifiers to train, i.e.{len(k_nearest_neighbour_conductors_with_indices.items())}\n")
     
     except Exception as exception:
         print(f"\n{exception}\n")
 
 def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_processor):
     if not k_nearest_neighbour_conductors:
-        return print("\nResults from experiments are required to classify unforeseen samples.\n")
+        return print("\nTrained classifiers are required to classify unforeseen samples.\n")
 
     k_neighbours_classifier = ""
     input_features  = []

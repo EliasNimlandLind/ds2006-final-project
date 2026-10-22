@@ -14,8 +14,8 @@ def main():
     data_processor = DataProcessor()
 
     while has_menu_been_exited == False:
-        main_menu_option_selection_text = ("1. Load a dataset and create a configuration for the experiments.\n"
-                                           "2. Conduct experiments.\n"
+        main_menu_option_selection_text = ("1. Load a dataset and create a configuration for the training of the classifiers.\n"
+                                           "2. Train classifiers.\n"
                                            "3. Show confusion matrix.\n"
                                            "4. Save data to file.\n"
                                            "5. Display model statistics.\n"
@@ -32,7 +32,7 @@ def main():
                 data_partitioning_configuration = handle_data_partitioning_menu(dataframe.shape[0])
                 k_nearest_neighbour_conductors_without_indices = handle_nearest_neighbour_conductor_menu(dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration)
 
-                experiment_configuration_text = ("\n*********************************************\n"
+                training_configuration_text = ("\n*********************************************\n"
                                             "EXPERIMENT CONFIGURATION\n\n"
                                             "Data Partitioning Strategy:\n"
                                             f"{data_partitioning_configuration['data_partitioning_strategy_name']}\n\n"
@@ -40,19 +40,19 @@ def main():
 
                 k_nearest_neighbour_conductors_with_indices = get_items_as_string_with_indices(k_nearest_neighbour_conductors_without_indices)
                 for current_index, current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_with_indices.items():
-                    experiment_configuration_text += f"Experiment: {current_index} {current_k_nearest_neighbour_conductor.get_k_value_text()}\n"  
-                experiment_configuration_text += "*********************************************"
-                print(experiment_configuration_text)
+                    training_configuration_text += f"Experiment: {current_index} {current_k_nearest_neighbour_conductor.get_k_value_text()}\n"  
+                training_configuration_text += "*********************************************"
+                print(training_configuration_text)
             
             case 2:
                 if not k_nearest_neighbour_conductors_without_indices: # This is used to check if the list is empty, and a message is displayed if the list is empty. 
-                    print("\nA configuration for the experiments was not found.\n")
+                    print("\nA configuration for the training was not found.\n")
                     continue
 
                 for current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_without_indices:
                     current_k_nearest_neighbour_conductor.execute_experiment(data_processor)
 
-                print("\nThe experiments were successfully conducted.\n")
+                print("\nThe classifiers were successfully trained.\n")
             
             case 3:
                 handle_confusion_matrix_menu(k_nearest_neighbour_conductors_with_indices)
@@ -91,7 +91,7 @@ def main():
 
             case 5:
                 if not k_nearest_neighbour_conductors_without_indices:
-                    print("\nResults from experiments are required to display statistics.\n")
+                    print("\nTrained classifiers are required to display the statistics.\n")
                     continue
 
                 for current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors_without_indices:

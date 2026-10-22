@@ -6,6 +6,7 @@ from data_preprocessing import DataProcessor
 
 from utility import get_items_as_string_with_indices, list_content_of_directory, validate_user_input_integer    
 
+
 dataframe = None
 normalized_and_encoded_dataframe = None
 
