@@ -168,10 +168,8 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_
     while has_menu_been_exited == False:
         try:
             classify_unforeseen_sample_classifier_menu_text = "\n"
-
             for current_index, current_k_nearest_neighbour_conductor in k_nearest_neighbour_conductors.items():
                 classify_unforeseen_sample_classifier_menu_text += f"{current_index}. {current_k_nearest_neighbour_conductor.get_k_value_text()}\n"
-            
             classify_unforeseen_sample_classifier_menu_text += "Select a model to use to classify the sample by typing the corresponding index: "
 
             number_of_classifiers = len(k_nearest_neighbour_conductors)
