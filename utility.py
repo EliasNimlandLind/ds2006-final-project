@@ -17,6 +17,25 @@ def list_content_of_directory(directory_name: str) -> list[str]:
         
     return os.listdir(directory_name)
 
+def save_strings_to_file(strings_to_save: list[str], save_file_name = "save_files/experiments_save_file", file_extension = ".txt"):
+    was_all_save_operations_successful = False
+    complete_file_name = save_file_name
+
+    if not complete_file_name.endswith(file_extension):
+        complete_file_name += file_extension
+
+    # Usage of "With" minimises errors such as corruption by not requiring manual opening and closing of files.
+    try:
+        with open(complete_file_name, mode="w") as save_file:
+            for current_string_to_save in strings_to_save:
+                save_file.write(current_string_to_save)
+
+        was_all_save_operations_successful = True
+    except IOError as io_error:
+        print(f"Input or output error: {io_error}")
+    
+    return was_all_save_operations_successful
+
 def sanitise_user_input(input_to_sanitise: str):
     input_to_sanitise = input_to_sanitise.strip()
     return input_to_sanitise
@@ -43,23 +62,4 @@ def get_valid_user_input_integer(text_to_display: str, value_error_message = "En
             raise ValueError(f"\n{value_error_message}, greater than {minimum_input_value}.\n")
             
     except ValueError as value_error:
-        print(f"\nInvalid input: {value_error}\n")
-
-def save_strings_to_file(strings_to_save: list[str], save_file_name = "save_files/experiments_save_file", file_extension = ".txt"):
-    was_all_save_operations_successful = False
-    complete_file_name = save_file_name
-
-    if not complete_file_name.endswith(file_extension):
-        complete_file_name += file_extension
-
-    # Usage of "With" minimises errors such as corruption by not requiring manual opening and closing of files.
-    try:
-        with open(complete_file_name, mode="w") as save_file:
-            for current_string_to_save in strings_to_save:
-                save_file.write(current_string_to_save)
-
-        was_all_save_operations_successful = True
-    except IOError as io_error:
-        print(f"Input or output error: {io_error}")
-    
-    return was_all_save_operations_successful 
+        print(f"\nInvalid input: {value_error}\n") 
