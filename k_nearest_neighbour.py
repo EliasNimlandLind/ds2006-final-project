@@ -1,9 +1,10 @@
-from enum import IntEnum
-
+import numpy
 import pandas
+
 from sklearn.metrics import ConfusionMatrixDisplay, accuracy_score, classification_report
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
+
 import matplotlib.pyplot as mathplotlib
 
 from data_partitioning_configuration import data_partitioning_strategy_names
@@ -199,49 +200,42 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors, data_
             except:
                 print("\nThe number representing an option must be an integer.\n")
             
-            raw_dataframe_loaded_from_file = pandas.DataFrame()
+            raw_dataframe_loaded_from_file = pandas.read_csv("datasets/training/ObesityDataSet_raw_and_data_sinthetic.csv")
             """Male,22,1.78,89.8,no,no,2,1,Sometimes,no,2,no,0,0,Sometimes,Public_Transportation"""
 
             match classify_unforeseen_sample_input:
                 case 1:
-                    raw_dataframe_loaded_from_file = pandas.read_csv("datasets/training/ObesityDataSet_raw_and_data_sinthetic.csv.csv")
                     input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(raw_dataframe_loaded_from_file)
                     has_menu_been_exited = True
-                    
                 case 2:
                     raw_dataframe_loaded_from_input = pandas.DataFrame(index=[0])
-                    for current_key in raw_dataframe_loaded_from_file.columns:
-                        
-                        unique_values = (
-                            raw_dataframe_loaded_from_file[current_key]
-                            .astype(str)
-                            .unique()
-                        )
-
+                    dtypes_from_file = raw_dataframe_loaded_from_file.dtypes
+                    for current_column_name in raw_dataframe_loaded_from_file.columns:
                         has_the_current_value_been_assigned = False
+                        
                         while has_the_current_value_been_assigned == False:
-                            key_value_input = input(
-                                f"Enter value for {current_key}: "
-                            ).strip()
+                            current_key_input_value = input(f"Enter value for {current_column_name}: ").strip()
 
-                            if key_value_input in unique_values:
-                                raw_dataframe_loaded_from_input[current_key] = key_value_input
+                            current_key_input_type = type(current_key_input_value)
+
+                            # Numpy's str_ does not contain item(), therefore, does input validation of each string require special treatment.
+                            if current_key_input_type is str:
+                                raw_dataframe_loaded_from_input[current_column_name] = current_key_input_value
+                                has_the_current_value_been_assigned = True
+                                continue
+
+                            if current_key_input_type is dtypes_from_file[current_column_name].item():
+                                raw_dataframe_loaded_from_input[current_column_name] = current_key_input_value
                                 has_the_current_value_been_assigned = True
                             else:
-                                print(
-                                    f"\n{key_value_input} was not found "
-                                    f"in column {current_key}.\n"
-                                )
+                                print(f"The type of {current_key_input_value}, i.e. {current_key_input_type}, is not {dtypes_from_file[current_column_name]}.")
                     
-                    input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(
-                        raw_dataframe_loaded_from_input
-                    )
-        
+                    input_features = data_processor.get_transformed_normalized_and_encoded_dataframe(raw_dataframe_loaded_from_input)
+                    
                 case _:
                     print("\nThe input must be 1 or 2.\n")
                     continue
 
-            classify_unforeseen_sample_input
             prediction = k_neighbours_classifier.predict(input_features)
             print(f"\nThe unforeseen sample was predicted to be: {prediction}.\n")
 
