@@ -56,8 +56,8 @@ class DataProcessor:
         # Thus, will the variable contain the raw features, and the exception being passed.
         try:
             processed_features = self.transformer.fit_transform(raw_features)
-        except ValueError:
-            pass
+        except ValueError as value_error:
+             print(f"\n{value_error}\n")           
 
         return pandas.DataFrame(
             self.min_max_scaler.fit_transform(processed_features),
