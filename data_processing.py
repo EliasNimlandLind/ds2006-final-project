@@ -34,7 +34,7 @@ class DataProcessor:
         self.min_max_scaler = MinMaxScaler()
 
     def get_ordinal_values(self) -> list[str]:
-        json_data = read_content_from_json_file("feature_definitions")
+        json_data = read_content_from_json_file("categorical_feature_definitions")
     
         categories = json_data["ordinalValues"][0]["categories"]
         features = json_data["ordinalValues"][1]["features"]
@@ -43,22 +43,25 @@ class DataProcessor:
         return ordinal_values
 
     def get_nominal_vales(self) -> list[str]:
-        json_data = read_content_from_json_file("feature_definitions")
+        json_data = read_content_from_json_file("categorical_feature_definitions")
         nominal_values = json_data["nominalValues"]
         
         return nominal_values
 
     def fit_transform(self, raw_features):
         self.features = raw_features.columns.tolist()
-        encoded_categorical_features_with_raw_numerical = raw_features
+        processed_features = raw_features
+
+        # This will fail if no numerical features are found, however, this means that this operation is not appropriate.
+        # Thus, will the variable contain the raw features, and the exception being passed.
         try:
-            encoded_categorical_features_with_raw_numerical = self.transformer.fit_transform(raw_features)
-        except Exception as exception:
-            print(exception)
-        
+            processed_features = self.transformer.fit_transform(raw_features)
+        except ValueError:
+            pass
+
         return pandas.DataFrame(
-            self.min_max_scaler.fit_transform(encoded_categorical_features_with_raw_numerical),
-            columns=encoded_categorical_features_with_raw_numerical.columns,
+            self.min_max_scaler.fit_transform(processed_features),
+            columns=processed_features.columns,
             index=raw_features.index,
         )
 
