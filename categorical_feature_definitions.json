@@ -8,12 +8,14 @@
 		},
 		{ "features": ["CAEC", "CALC"] }
 	],
-	"nominalValues": [
-		"Gender",
-		"family_history_with_overweight",
-		"SMOKE",
-		"FAVC",
-		"SCC",
-		"MTRANS"
-	]
+	"nominalValues": {
+		"obesity": [
+			"Gender",
+			"family_history_with_overweight",
+			"SMOKE",
+			"FAVC",
+			"SCC",
+			"MTRANS"
+		]
+	}
 }

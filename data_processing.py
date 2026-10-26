@@ -13,22 +13,23 @@ class DataProcessor:
         
         # "passthrough" is included to avoid encoding numerical values.
         self.transformer = ColumnTransformer(
-            transformers=[
-                (
-                    "ordinal",
-                    OrdinalEncoder(categories=self.get_ordinal_values()[0]),
-                    self.get_ordinal_values()[1],
-                ),
-                (
-                    "nominal",
-                    OneHotEncoder(
-                        sparse_output=False,
+                transformers=[
+                    (
+                        "ordinal",
+                        OrdinalEncoder(categories=self.get_ordinal_values()[0]),
+                        self.get_ordinal_values()[1],
                     ),
-                    self.get_nominal_vales(),
-                ),
-            ],
-            remainder="passthrough", 
-            ).set_output(transform="pandas")
+                    (
+                        "nominal",
+                        OneHotEncoder(
+                            sparse_output=False,
+                        ),
+                        self.get_nominal_vales(),
+                    ),
+                ],
+                remainder="passthrough", 
+                ).set_output(transform="pandas")
+            
         
         self.min_max_scaler = MinMaxScaler()
 
@@ -49,9 +50,12 @@ class DataProcessor:
 
     def fit_transform(self, raw_features):
         self.features = raw_features.columns.tolist()
-
-        encoded_categorical_features_with_raw_numerical = self.transformer.fit_transform(raw_features)
-
+        encoded_categorical_features_with_raw_numerical = raw_features
+        try:
+            encoded_categorical_features_with_raw_numerical = self.transformer.fit_transform(raw_features)
+        except Exception as exception:
+            print(exception)
+        
         return pandas.DataFrame(
             self.min_max_scaler.fit_transform(encoded_categorical_features_with_raw_numerical),
             columns=encoded_categorical_features_with_raw_numerical.columns,
