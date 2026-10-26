@@ -57,8 +57,8 @@ class DataProcessor:
         try:
             processed_features = self.transformer.fit_transform(raw_features)
         except ValueError as value_error:
-             print(f"\n{value_error}\n")           
-
+            pass
+        
         return pandas.DataFrame(
             self.min_max_scaler.fit_transform(processed_features),
             columns=processed_features.columns,
