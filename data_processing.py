@@ -50,15 +50,15 @@ class DataProcessor:
 
     def fit_transform(self, raw_features):
         self.features = raw_features.columns.tolist()
-        processed_features = raw_features
+        processed_features = None
 
         # This will fail if no numerical features are found, however, this means that this operation is not appropriate.
-        # Thus, will the variable contain the raw features, and the exception being passed.
+        # Therefore, will the the variable be set to the raw features, and the dataset assumed to contain solely numerical features.
         try:
             processed_features = self.transformer.fit_transform(raw_features)
-        except ValueError as value_error:
-            pass
-        
+        except ValueError:
+            processed_features = raw_features
+
         return pandas.DataFrame(
             self.min_max_scaler.fit_transform(processed_features),
             columns=processed_features.columns,
