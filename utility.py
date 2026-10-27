@@ -26,7 +26,7 @@ def sanitise_string(string_to_sanitise: str) -> str:
     string_to_sanitise = string_to_sanitise.strip()
     return string_to_sanitise
 
-def get_valid_user_input_integer(text_to_display: str, value_error_message = "Enter an integer", maximum_input_value = 0, minimum_input_value = 1):
+def get_valid_user_input_integer(text_to_display: str, value_error_message = "Enter an integer", maximum_input_value = 0, minimum_input_value = 1) -> (int | None):
     """
     This function tries to convert an integer represented as a string, gathered from the user.
     
