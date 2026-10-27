@@ -12,7 +12,9 @@ class DataProcessor:
         self.features = []
         
         # "remainder=passthrough" is included to avoid encoding numerical values. 
-        # However, an error occurs if only numerical values are present, which is solved by passing the value error in fit_transform. 
+        # However, an error occurs if only numerical values are present, which is solved by passing the value error in fit_transform.
+        # The assignment of this variable is done in __init__ as there is no need for this to be done outside of an instance of the class
+        # in addition to simplifying the creation of the instance.
         self.transformer = ColumnTransformer(
                 transformers=[
                     (
@@ -79,7 +81,7 @@ class DataProcessor:
 
         features = self.raw_dataframe.drop(columns=[target_name])
         target = self.raw_dataframe[[target_name]]
-        
+
         return pandas.concat(
             [self.fit_transform(features), target],
             axis=1,
