@@ -33,6 +33,7 @@ def main():
                 data_partitioning_configuration = handle_data_partitioning_menu(dataframe.shape[0])
                 k_nearest_neighbour_conductors_without_indices = handle_nearest_neighbour_conductor_menu(dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration)
 
+                # The usage of collections, i.e. the lines inside the parenthesis, allows for shorter, vertical lines, therefore, this might lead to higher readability.
                 training_configuration_text = ("\n*********************************************\n"
                                             "EXPERIMENT CONFIGURATION\n\n"
                                             "Data Partitioning Strategy:\n"
