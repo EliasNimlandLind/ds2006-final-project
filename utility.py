@@ -13,6 +13,10 @@ def get_items_as_a_indexed_dictionary(items_without_indices: list) -> dict[int, 
     return items_with_indices
 
 def list_content_of_directory(directory_name: str) -> list[str]:
+    """
+    This function list containing each file in a the specified directory. A directory with the specified name is 
+    created if the directory does not exist.
+    """
     if os.path.exists(directory_name) == False:
         os.mkdir(directory_name)
         
@@ -26,7 +30,8 @@ def get_valid_user_input_integer(text_to_display: str, value_error_message = "En
     """
     This function tries to convert an integer represented as a string, gathered from the user.
     
-    Returns: An integer representation of the integer represented as string is returned if the validation succeed.
+    Returns: An integer representation of the integer represented as string is returned if the validation succeed, 
+    or "None" if the validation fails.
     """
     user_input_as_string = sanitise_string(input(text_to_display))
     try:
