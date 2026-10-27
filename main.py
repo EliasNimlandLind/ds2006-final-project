@@ -29,7 +29,8 @@ def main():
             case 1:
                 dataframe, normalized_and_encoded_dataframe = handle_data_frame_menu(data_processor)
                 print_dataframe_statistics(data_processor, dataframe, normalized_and_encoded_dataframe)
-                
+
+                # "dataframe.shape[0]" returns the number of rows.
                 data_partitioning_configuration = handle_data_partitioning_menu(dataframe.shape[0])
                 k_nearest_neighbour_conductors_without_indices = handle_nearest_neighbour_conductor_menu(dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration)
 
