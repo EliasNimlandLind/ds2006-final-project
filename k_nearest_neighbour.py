@@ -258,6 +258,8 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors: list[
                                     is_the_current_value_assigned = True
                                     current_column_index = current_column_index + 1
 
+                            # This syntax allows the same logic to be performed if either of these errors is raised, 
+                            # while being shorter than writing and maintaining the handling of each error separately.
                             except (TypeError, ValueError) as exception:
                                 print(f"\nInvalid input: {exception}\n")
 
