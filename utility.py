@@ -22,9 +22,9 @@ def list_content_of_directory(directory_name: str) -> list[str]:
         
     return os.listdir(directory_name)
 
-def sanitise_string(input_to_sanitise: str):
-    input_to_sanitise = input_to_sanitise.strip()
-    return input_to_sanitise
+def sanitise_string(string_to_sanitise: str) -> str:
+    string_to_sanitise = string_to_sanitise.strip()
+    return string_to_sanitise
 
 def get_valid_user_input_integer(text_to_display: str, value_error_message = "Enter an integer", maximum_input_value = 0, minimum_input_value = 1):
     """
