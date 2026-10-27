@@ -137,7 +137,7 @@ def handle_nearest_neighbour_conductor_menu(dataframe: pandas.DataFrame, normali
 
 def handle_confusion_matrix_menu(k_nearest_neighbour_conductors_with_indices):
     try:
-        # This is used to avoid trying to use conductors that have not been initialised, and to raise an value error if the conductors are not initialised. 
+        # This is used to avoid trying to use conductors that have not been initialised, and to raise an value error to avoid further execution of the logic found in this function, if the conductors are not initialised. 
         if not k_nearest_neighbour_conductors_with_indices:
             raise ValueError("Classifiers must be trained before display the corresponding confusion matrices.")
 
