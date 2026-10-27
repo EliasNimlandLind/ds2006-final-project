@@ -69,7 +69,7 @@ def save_strings_to_file(strings_to_save: list[str], save_file_name = "save_file
     if not complete_file_name.endswith(file_extension):
         complete_file_name += file_extension
 
-    # Usage of "With" minimises errors such as corruption by not requiring manual opening and closing of files.
+    # The usage of "With" minimises errors such as corruption by not requiring manual opening and closing of files.
     try:
         with open(complete_file_name, mode="w") as save_file:
             for current_string_to_save in strings_to_save:
