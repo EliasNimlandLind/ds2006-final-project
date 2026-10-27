@@ -182,6 +182,7 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors: list[
     
             selected_classifier_input = get_valid_user_input_integer(text_to_display=classify_unforeseen_sample_classifier_menu_text, maximum_input_value=number_of_classifiers)
 
+            # The variable having the value of "None" indicates an error, e.g. the type of the input being anything other than an integer.
             if (selected_classifier_input is None):
                 raise ValueError("Invalid input: The input was likely not an integer.")
         
