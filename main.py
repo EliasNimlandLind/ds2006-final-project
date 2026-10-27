@@ -46,7 +46,8 @@ def main():
                 print(training_configuration_text)
             
             case 2:
-                if not k_nearest_neighbour_conductors_without_indices: # This is used to check if the list is empty, and a message is displayed if the list is empty. 
+                # This is used to avoid trying to execute the training of conductors that have not been initialised, and to display an error message if the conductors are not initialised. 
+                if not k_nearest_neighbour_conductors_without_indices:
                     print("\nA configuration for the training was not found.\n")
                     continue
 
@@ -62,7 +63,7 @@ def main():
                 try:
                     file_name_input = input("Enter the file name that will contain all data: ")
                     texts_to_save = []
-
+    
                     dataframe_row_count = 50
                     dataframes_text_to_save = f"Dataframes - First {dataframe_row_count} rows\n"
                     dataframes_text_to_save += "\nRaw\n\n"

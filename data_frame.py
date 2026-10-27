@@ -57,6 +57,7 @@ def handle_data_frame_menu(data_processor: DataProcessor, datasets_directory_nam
 
 def print_dataframe_statistics(data_processor: DataProcessor, dataframe, normalized_and_encoded_dataframe):
     dataframe_column_names_text = ""
+    
     for current_feature_name in dataframe.columns[:-1]: # Using [:-1] is done to limit the iteration to item before the last one to avoid concatenate the name of the target classes.
         dataframe_column_names_text += f"\n{str(current_feature_name)}"
 

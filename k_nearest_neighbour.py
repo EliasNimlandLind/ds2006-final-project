@@ -160,6 +160,7 @@ def handle_confusion_matrix_menu(k_nearest_neighbour_conductors_with_indices):
         print(f"\n{exception}\n")
 
 def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors: list[K_nearest_neighbour_conductor], data_processor: DataProcessor) -> None:
+    # This is used to avoid trying to use conductors that have not been initialised, and to display an error message if the conductors are not initialised. 
     if not k_nearest_neighbour_conductors:
         return print("\nTrained classifiers are required to classify unforeseen samples.\n")
 
@@ -225,6 +226,7 @@ def handle_classify_unforeseen_sample_menu(k_nearest_neighbour_conductors: list[
                             
                         is_the_current_value_assigned = False
                         while not is_the_current_value_assigned:
+                            # This prints the possible choices if the current feature comprise a limited set of categorical values, i.e. the type is a string.
                             if (target_type == str):
                                 print(possible_choices_text)
 

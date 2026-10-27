@@ -11,7 +11,8 @@ class DataProcessor:
         self.raw_dataframe = pandas.DataFrame()
         self.features = []
         
-        # "passthrough" is included to avoid encoding numerical values.
+        # "remainder=passthrough" is included to avoid encoding numerical values. 
+        # However, an error occurs if only numerical values are present, which is solved by passing the value error in fit_transform. 
         self.transformer = ColumnTransformer(
                 transformers=[
                     (
