@@ -23,6 +23,8 @@ class K_nearest_neighbour_conductor():
         return f"k = {self.k_value}"
 
     def __str__(self):
+    # This simplifies the printing information about an instance of the class, by overriding __str__(), 
+    # which normally prints information related to memory, in the context of objects.
         try:
             model_statistics = ""
             
@@ -149,7 +151,7 @@ def handle_confusion_matrix_menu(k_nearest_neighbour_conductors_with_indices):
             confusion_matrix_index_input = 0
             
             confusion_matrix_index_input = get_valid_user_input_integer("Enter the index of the classifier for which you want to display the associated confusion matrix: ", "The number representing a classifier must be an integer", len(k_nearest_neighbour_conductors_with_indices.items()))
-                
+    
             if 0 < confusion_matrix_index_input <= len(k_nearest_neighbour_conductors_with_indices.items()):
                 k_nearest_neighbour_conductors_with_indices[confusion_matrix_index_input].display_confusion_matrix()
                 has_menu_been_exited = True
