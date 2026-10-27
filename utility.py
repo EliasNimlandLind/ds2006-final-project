@@ -52,6 +52,17 @@ def get_valid_user_input_integer(text_to_display: str, value_error_message = "En
         print(f"\nInvalid input: {value_error}\n") 
 
 def save_strings_to_file(strings_to_save: list[str], save_file_name = "save_files/experiments_save_file", file_extension = ".txt"):
+    """
+    This function saves the specified list of string variables to a file.
+
+    Args:
+        strings_to_save (list[str]): A list containing all the string variables to save.
+        save_file_name (str, optional): The name of the file to write to. Defaults to "save_files/experiments_save_file".
+        file_extension (str, optional): The extension of the file to write to. Defaults to ".txt".
+
+    Returns:
+        was_all_save_operations_successful: A bool indicating the success status of the write operation.
+    """
     was_all_save_operations_successful = False
     complete_file_name = save_file_name
 
