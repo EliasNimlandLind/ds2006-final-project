@@ -151,7 +151,6 @@ def handle_confusion_matrix_menu(k_nearest_neighbour_conductors_with_indices):
             print(k_nearest_neighbour_conductors_with_indices_as_text)    
             
             confusion_matrix_index_input = 0
-            
             confusion_matrix_index_input = get_valid_user_input_integer("Enter the index of the classifier for which you want to display the associated confusion matrix: ", "The number representing a classifier must be an integer", len(k_nearest_neighbour_conductors_with_indices.items()))
     
             if 0 < confusion_matrix_index_input <= len(k_nearest_neighbour_conductors_with_indices.items()):
