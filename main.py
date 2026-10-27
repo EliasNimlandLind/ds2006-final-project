@@ -105,7 +105,8 @@ def main():
             case 0:
                 print("\nExiting...\n")
                 has_menu_been_exited = True
-                
+
+            # This prints an error message if the input is not equal to a predefined case.    
             case _:
                 print("\nInvalid choice. The integer must correspond to one of the stated choices.\n")
 
