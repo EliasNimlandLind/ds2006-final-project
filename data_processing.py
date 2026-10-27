@@ -32,7 +32,7 @@ class DataProcessor:
                 ],
                 remainder="passthrough", 
                 ).set_output(transform="pandas")
-            
+                # "transform=pandas" ensures compatibility between the transformer and dataframes.
         
         self.min_max_scaler = MinMaxScaler()
 
