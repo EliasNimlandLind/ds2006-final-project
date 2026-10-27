@@ -13,7 +13,7 @@ from data_processing import DataProcessor
 from utility import sanitise_string, get_valid_user_input_integer
 
 class K_nearest_neighbour_conductor():
-    def __init__(self, k_value, dataframe, normalized_and_encoded_dataframe, data_partitioning_configuration):
+    def __init__(self, k_value: int, dataframe: pandas.DataFrame, normalized_and_encoded_dataframe: pandas.DataFrame, data_partitioning_configuration):
         self.k_value = k_value
         self.dataframe = dataframe
         self.normalized_and_encoded_dataframe = normalized_and_encoded_dataframe
@@ -77,7 +77,8 @@ class K_nearest_neighbour_conductor():
         except Exception as exception:
             print(f"\n{exception}\n")
         
-    def execute_training(self, data_processor: DataProcessor) -> None:        
+    def execute_training(self, data_processor: DataProcessor) -> None:
+        # axis=1 is used to describe if the operation should be done on each row or column.      
         all_features = self.normalized_and_encoded_dataframe.drop(data_processor.get_last_column_of_dataframe(self.normalized_and_encoded_dataframe), axis=1)
         # Creates a dataframe from solely the data in the last column.
         all_classes = data_processor.get_last_column_as_a_separate_dataframe(self.dataframe)
