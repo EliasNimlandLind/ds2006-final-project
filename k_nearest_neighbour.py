@@ -40,9 +40,9 @@ class K_nearest_neighbour_conductor():
                     raise ValueError("The number of folds must be greater than 0.")
                 
                 score_types = ["accuracy", 
-                                "average_precision", 
-                                "recall_micro", 
-                                "f1_micro"]
+                               "average_precision", 
+                               "recall_micro", 
+                               "f1_micro"]
                 
                 model_statistics = f"\n{self.get_k_value_text()}"
                 for current_score_type in score_types:
